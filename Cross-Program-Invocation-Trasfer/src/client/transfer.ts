@@ -96,7 +96,7 @@ export async function send(): Promise<void> {
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
-      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/helloworld.so\``,
+      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/cross_program_invocation_transfer.so\``,
     );
   }
 
