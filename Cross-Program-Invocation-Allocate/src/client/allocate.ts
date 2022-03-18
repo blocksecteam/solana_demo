@@ -107,6 +107,8 @@ export async function allocate(): Promise<void> {
 
   let syskey = SystemProgram.programId;
 
+  let payer = await getPayer();
+  
   const instruction = new TransactionInstruction({
     keys: [{pubkey: syskey, isSigner: false, isWritable: false},{pubkey: allocated_pubkey, isSigner: false, isWritable: true}],
     programId,
