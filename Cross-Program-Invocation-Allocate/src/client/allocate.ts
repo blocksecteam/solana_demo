@@ -27,14 +27,10 @@ let connection: Connection;
 let payer: Keypair;
 
 /**
- * Hello world's program id
+ * cross_program_invocation_allocate's program id
  */
 let programId: PublicKey;
 
-/**
- * The public key of the account we are saying hello to
- */
-let greetedPubkey: PublicKey;
 
 /**
  * Path to program files
@@ -47,13 +43,13 @@ const PROGRAM_PATH = path.resolve(__dirname, '../../dist/program');
  *   - `npm run build:program-c`
  *   - `npm run build:program-rust`
  */
-const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'spl_example_cross_program_invocation.so');
+const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'cross_program_invocation_allocate.so');
 
 /**
  * Path to the keypair of the deployed program.
- * This file is created when running `solana program deploy dist/program/helloworld.so`
+ * This file is created when running `solana program deploy dist/program/cross_program_invocation_allocate.so`
  */
-const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'spl_example_cross_program_invocation-keypair.json');
+const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'cross_program_invocation_allocate-keypair.json');
 
 
 

@@ -18,7 +18,7 @@ async function main() {
   await establishPayer();
 
 
-  // create the account;
+  // allocate the account;
   await allocate();
   
 
