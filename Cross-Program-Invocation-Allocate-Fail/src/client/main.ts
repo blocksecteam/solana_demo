@@ -5,8 +5,8 @@
 import {
   establishConnection,
   establishPayer,
-  create,
-} from './hello_world';
+  allocate,
+} from './allocate';
 
 async function main() {
   console.log("Let's create an PDA account");
@@ -19,7 +19,7 @@ async function main() {
 
 
   // create the account;
-  await create();
+  await allocate();
   
 
   console.log('Success');
