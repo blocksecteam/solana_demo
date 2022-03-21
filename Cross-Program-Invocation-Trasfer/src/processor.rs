@@ -37,7 +37,6 @@ pub fn process_instruction(
     &[
         from_account.clone(),
         to_account.clone(),
-        system_program_account.clone(),
     ],
 )?;
 
