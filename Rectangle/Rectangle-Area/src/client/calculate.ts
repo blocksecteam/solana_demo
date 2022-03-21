@@ -15,7 +15,7 @@ import {
 import {
   struct,
   u32,
-} from "@solana/buffer-layout";
+} from '@solana/buffer-layout';
 
 import fs from 'mz/fs';
 import path from 'path';
@@ -74,7 +74,7 @@ export async function establishConnection(): Promise<void> {
  */
 export async function establishPayer(): Promise<void> {
 
-  let payer = await getPayer();
+  payer = await getPayer();
   
   let lamports = await connection.getBalance(payer.publicKey);
  
@@ -102,7 +102,7 @@ export async function calculate(): Promise<void> {
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
-      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/cross_program_invocation_transfer.so\``,
+      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/Rectangle_Area.so\``,
     );
   }
 
