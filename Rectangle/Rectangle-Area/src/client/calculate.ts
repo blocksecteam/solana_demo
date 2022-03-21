@@ -11,6 +11,12 @@ import {
   Transaction,
   sendAndConfirmTransaction,
 } from '@solana/web3.js';
+
+import {
+  struct,
+  u32,
+} from ("@solana/buffer-layout");
+
 import fs from 'mz/fs';
 import path from 'path';
 
