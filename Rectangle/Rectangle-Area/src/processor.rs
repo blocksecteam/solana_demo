@@ -34,7 +34,7 @@ pub fn process_instruction(
         height: b,
     };
 
-    println!(
+    msg!(
         "The area of the rectangle is {} square pixels.",
         rect1.area()
     );
