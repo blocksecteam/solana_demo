@@ -5,7 +5,9 @@
 import {
   establishConnection,
   establishPayer,
+  checkProgram,
   calculate,
+  report
 } from './calculate';
 
 async function main() {
@@ -16,11 +18,15 @@ async function main() {
 
   // Determine who pays for the fees
   await establishPayer();
-
-
-  // transfer;
+  
+  // check and create account for data
+  await checkProgram();
+  
+  // calculate;
   await calculate();
   
+  // report the result 
+  await report();
 
   console.log('Success');
 }

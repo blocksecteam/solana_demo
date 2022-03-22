@@ -1,16 +1,19 @@
 //! Program instruction processor
-
+use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
+    entrypoint，
     entrypoint::ProgramResult, msg,
     pubkey::Pubkey,
     program_error::ProgramError
 };
 use std::convert::TryInto;
 
+#[derive(BorshSerialize, BorshDeserialize, Debug)]
 struct Rectangle {
     width: u32,
     height: u32,
+    area: u32,
 }
 
 impl Rectangle {
@@ -27,18 +30,25 @@ pub fn process_instruction(
 ) -> ProgramResult {
     let (a, rest_b) = unpack_u32(_instruction_data)?;
     let (b, rest) = unpack_u32(rest_b)?;
-    msg!("width: {:?}, height: {:?}", a, b);
 
-    let rect1 = Rectangle {
-        width: a,
-        height: b,
-    };
+    let accounts_iter = &mut accounts.iter();
 
-    msg!(
-        "The area of the rectangle is {} square pixels.",
-        rect1.area()
-    );
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
 
+    // The account must be owned by the program in order to modify its data
+    if account.owner != program_id {
+        msg!("Rectangle account does not have the correct program id");
+        return Err(ProgramError::IncorrectProgramId);
+    }
+    
+    let mut rectangle1 = Rectangle::try_from_slice(&account.data.borrow())?;
+    rectangle1.width = a;
+    rectangle1.height = b;
+    rectangle1.area = rectangle1.area();
+
+    rectangle1.serialize(&mut &mut account.data.borrow_mut()[..])?;
+    
 
     Ok(())
 }
