@@ -9,9 +9,10 @@ edition = "2018"
 
 [features]
 no-entrypoint = []
-test-bpf = []
 
 [dependencies]
+borsh = "0.9.3"
+borsh-derive = "0.9.1"
 solana-program = "1.9.9"
 
 [dev-dependencies]

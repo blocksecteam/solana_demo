@@ -54,24 +54,25 @@ const PROGRAM_PATH = path.resolve(__dirname, '../../dist/program');
  *   - `npm run build:program-c`
  *   - `npm run build:program-rust`
  */
-const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'Rectangle_Area.so');
+const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'Rectangle_Perimeter_Fail.so');
 
 /**
  * Path to the keypair of the deployed program.
- * This file is created when running `solana program deploy dist/program/Rectangle_Area.so`
+ * This file is created when running `solana program deploy dist/program/Rectangle_Perimeter_Fail.so`
  */
-const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'Rectangle_Area-keypair.json');
+const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'Rectangle_Perimeter_Fail-keypair.json');
 
 
 class Rectangle {
   width = 0;
   height = 0;
   area = 0;
-  constructor(fields: {width: number, height: number, area: number} | undefined = undefined) {
+  constructor(fields: {width: number, height: number, area: number, perimeter: number} | undefined = undefined) {
     if (fields) {
       this.width = fields.width;
       this.height = fields.height;
       this.area = fields.area;
+      this.perimeter = fields.perimeter;
     }
   }
 }
@@ -85,7 +86,7 @@ const RectangleSchema = new Map([
               ['width', 'u32'],
               ['height', 'u32'],
               ['area', 'u32'],
-
+              ['perimeter', 'u32'],
           ]
       }
   ]
@@ -134,7 +135,7 @@ export async function checkProgram(): Promise<void> {
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
-      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/Rectangle_Area.so\``,
+      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/Rectangle_Perimeter_Fail.so\``,
     );
   }
 
@@ -143,7 +144,7 @@ export async function checkProgram(): Promise<void> {
   if (programInfo === null) {
     if (fs.existsSync(PROGRAM_SO_PATH)) {
       throw new Error(
-        'Program needs to be deployed with `solana program deploy dist/program/Rectangle_Area.so`',
+        'Program needs to be deployed with `solana program deploy dist/program/Rectangle_Perimeter_Fail.so`',
       );
     } else {
       throw new Error('Program needs to be built and deployed');
@@ -243,6 +244,8 @@ export async function report(): Promise<void> {
     'height:',
     rectangle1.height,
     'area:',
-    rectangle1.area
+    rectangle1.area,
+    'perimeter:',
+    rectangle1.perimeter
   );
 }

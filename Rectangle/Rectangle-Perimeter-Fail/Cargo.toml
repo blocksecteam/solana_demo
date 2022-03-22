@@ -1,7 +1,7 @@
 [package]
-name = "Rectangle_Amount"
+name = "Rectangle_Perimeter_Fail"
 version = "1.0.0"
-description = "Rectangle_Amount"
+description = "Rectangle_Perimeter_Fail"
 authors = ["BlockSec Team"]
 repository = "https://github.com/blocksecteam/solana_demo"
 license = "Apache-2.0"
@@ -9,9 +9,10 @@ edition = "2018"
 
 [features]
 no-entrypoint = []
-test-bpf = []
 
 [dependencies]
+borsh = "0.9.3"
+borsh-derive = "0.9.1"
 solana-program = "1.9.9"
 
 [dev-dependencies]
