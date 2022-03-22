@@ -38,6 +38,10 @@ let payer: Keypair;
  */
 let programId: PublicKey;
 
+/**
+ * Rectangle Account's public key
+ */
+let RecPubkey: PublicKey;
 
 /**
  * Path to program files
