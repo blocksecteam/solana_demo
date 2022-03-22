@@ -1,9 +1,8 @@
 //! Program instruction processor
-use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
-    entrypoint，
     entrypoint::ProgramResult, msg,
+    borsh::{BorshDeserialize, BorshSerialize},
     pubkey::Pubkey,
     program_error::ProgramError
 };
@@ -37,7 +36,7 @@ pub fn process_instruction(
     let account = next_account_info(accounts_iter)?;
 
     // The account must be owned by the program in order to modify its data
-    if account.owner != program_id {
+    if account.owner != _program_id {
         msg!("Rectangle account does not have the correct program id");
         return Err(ProgramError::IncorrectProgramId);
     }
