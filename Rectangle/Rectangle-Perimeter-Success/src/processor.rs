@@ -7,7 +7,6 @@ use solana_program::{
     entrypoint::ProgramResult, msg,
     pubkey::Pubkey,
     program_error::ProgramError,
-    program_pack::{Pack, Sealed},
 };
 use std::{convert::TryInto, mem, io::BufWriter};
 
@@ -68,6 +67,8 @@ pub fn process_instruction(
 
     new_account_data.perimeter = new_account_data.perimeter();
 
+    let mut account_data = account.data.borrow_mut();
+    
     let mut bw = BufWriter::new(&mut account_data);
     
     new_account_data.serialize(&mut bw).unwrap();
