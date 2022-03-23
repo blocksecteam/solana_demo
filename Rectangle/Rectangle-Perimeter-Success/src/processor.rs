@@ -66,10 +66,8 @@ pub fn process_instruction(
     let mut new_account_data = conversion_logic(&account_data)?;
 
     new_account_data.perimeter = new_account_data.perimeter(); 
-
-    let mut bw = BufWriter::new(&mut &mut account_data[..]);
     
-    new_account_data.serialize(&mut bw).unwrap();
+    new_account_data.serialize(&mut &mut account.data.borrow_mut()[..])?;
 
     Ok(())
 }
