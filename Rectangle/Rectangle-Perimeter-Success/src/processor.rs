@@ -92,8 +92,9 @@ fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
 
 fn conversion_logic(src: &[u8]) -> Result<RectangleCurrent, ProgramError> {
     let past = array_ref![src, 0, PREVIOUS_DATA_SIZE];
-    let (space) = array_refs![
+    let (_, space) = array_refs![
         past,
+        0,
         PREVIOUS_DATA_SIZE
     ];
     // Logic to upgrade from previous version
