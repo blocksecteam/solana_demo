@@ -68,7 +68,7 @@ pub fn process_instruction(
 
     new_account_data.perimeter = new_account_data.perimeter(); 
     
-    let mut deref = account.data.borrow_mut().deref_mut();
+    let mut deref = account_data.deref_mut();
 
     let mut bw = BufWriter::new(deref);
 
