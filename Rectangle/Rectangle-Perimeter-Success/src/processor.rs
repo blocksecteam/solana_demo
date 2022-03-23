@@ -27,7 +27,7 @@ pub struct RectangleOld {
     area: u32,
 }
 
-impl RectangleOld, RectangleCurrent{
+impl RectangleCurrent{
     fn area(&self) -> u32 {
         self.width * self.height
     }
@@ -39,28 +39,6 @@ impl RectangleOld, RectangleCurrent{
 
 // Previous data size
 const PREVIOUS_DATA_SIZE: usize = mem::size_of::<RectangleOld>();
-
-
-
-pub fn conversion_logic(src: &[u8]) -> Result<RectangleCurrent, ProgramError> {
-    let past = array_ref![src, 0, PREVIOUS_DATA_SIZE];
-    let space = array_refs![
-        past,
-        PREVIOUS_DATA_SIZE
-    ];
-    // Logic to upgrade from previous version
-    // GOES HERE
-    let old = try_from_slice_unchecked::<RectangleOld>(space).unwrap();
-
-    // Copy the vaule and give back
-    Ok(RectangleCurrent{
-        width: old.width,
-        height: old.height,
-        area: old.area,
-        perimeter: 0,
-    })
-}
-
 
 
 /// Instruction processor
@@ -109,4 +87,23 @@ fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
         .map(u32::from_le_bytes)
         .ok_or(ProgramError::InvalidInstructionData)?;
     Ok((value, rest))
+}
+
+fn conversion_logic(src: &[u8]) -> Result<RectangleCurrent, ProgramError> {
+    let past = array_ref![src, 0, PREVIOUS_DATA_SIZE];
+    let space = array_refs![
+        past,
+        PREVIOUS_DATA_SIZE
+    ];
+    // Logic to upgrade from previous version
+    // GOES HERE
+    let old = try_from_slice_unchecked::<RectangleOld>(space).unwrap();
+
+    // Copy the vaule and give back
+    Ok(RectangleCurrent{
+        width: old.width,
+        height: old.height,
+        area: old.area,
+        perimeter: 0,
+    })
 }
