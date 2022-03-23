@@ -68,7 +68,7 @@ pub fn process_instruction(
     new_account_data.perimeter = new_account_data.perimeter();
 
     let mut account_data = account.data.borrow_mut();
-    
+
     let mut bw = BufWriter::new(&mut account_data);
     
     new_account_data.serialize(&mut bw).unwrap();
@@ -92,7 +92,7 @@ fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
 
 fn conversion_logic(src: &[u8]) -> Result<RectangleCurrent, ProgramError> {
     let past = array_ref![src, 0, PREVIOUS_DATA_SIZE];
-    let space = array_refs![
+    let (space) = array_refs![
         past,
         PREVIOUS_DATA_SIZE
     ];
