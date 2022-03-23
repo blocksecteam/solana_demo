@@ -8,7 +8,7 @@ use solana_program::{
     pubkey::Pubkey,
     program_error::ProgramError,
 };
-use std::{convert::TryInto, mem, io::BufWriter};
+use std::{convert::TryInto, mem, io::BufWriter, ops::DerefMut};
 
 /// New one 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
@@ -68,7 +68,11 @@ pub fn process_instruction(
 
     new_account_data.perimeter = new_account_data.perimeter(); 
     
-    new_account_data.serialize(&mut &mut account_data[..])?;
+    let mut deref = account.data.borrow_mut().deref_mut();
+
+    let mut bw = BufWriter::new(deref);
+
+    new_account_data.serialize(&mut bw).unwrap();
 
     Ok(())
 }
