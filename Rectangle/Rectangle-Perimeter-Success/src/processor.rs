@@ -10,7 +10,7 @@ use solana_program::{
 };
 use std::{convert::TryInto, mem, io::BufWriter};
 
-// New one 
+/// New one 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct RectangleCurrent {
     width: u32,
@@ -19,7 +19,7 @@ pub struct RectangleCurrent {
     perimeter: u32,
 }
 
-// Old one 
+/// Old one 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct RectangleOld {
     width: u32,
