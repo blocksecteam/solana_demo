@@ -167,7 +167,7 @@ export async function checkProgram(): Promise<void> {
       'to store the data',
     );
     const lamports = await connection.getMinimumBalanceForRentExemption(
-      Rectangle_SIZE,
+      1024,
     );
 
     const transaction = new Transaction().add(
