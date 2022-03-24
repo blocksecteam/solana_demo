@@ -91,7 +91,7 @@ const RectangleSchema = new Map([
   ]
  ]);
 
-const Rectangle_SIZE = 16;
+const Rectangle_SIZE = 1024;
 
 /**
  * Establish a connection to the cluster
