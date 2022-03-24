@@ -19,7 +19,7 @@ import {
 
 import fs from 'mz/fs';
 import path from 'path';
-import * as borsh from 'borsh';
+import { serialize, deserialize, deserializeUnchecked } from 'borsh';;
 
 import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
 
@@ -93,7 +93,6 @@ const RectangleSchema = new Map([
   ]
  ]);
 
-const Rectangle_SIZE = 16;
 
 /**
  * Establish a connection to the cluster
@@ -169,7 +168,7 @@ export async function checkProgram(): Promise<void> {
       'to store the data',
     );
     const lamports = await connection.getMinimumBalanceForRentExemption(
-      Rectangle_SIZE,
+      1024,
     );
 
     const transaction = new Transaction().add(
@@ -179,7 +178,7 @@ export async function checkProgram(): Promise<void> {
         seed: Rectangle_SEED,
         newAccountPubkey: RecPubkey,
         lamports,
-        space: Rectangle_SIZE,
+        space: 1024,
         programId,
       }),
     );
@@ -230,7 +229,7 @@ export async function report(): Promise<void> {
   if (accountInfo === null) {
     throw 'Error: cannot find the Rectangle account';
   }
-  const rectangle1 = borsh.deserialize(
+  const rectangle1 = deserializeUnchecked(
     RectangleSchema,
     Rectangle,
     accountInfo.data,
