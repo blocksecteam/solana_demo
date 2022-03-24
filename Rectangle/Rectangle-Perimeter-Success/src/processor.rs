@@ -99,7 +99,7 @@ fn conversion_logic(src: &[u8]) -> Result<RectangleCurrent, ProgramError> {
         PREVIOUS_DATA_SIZE
     ];
     // Logic to upgrade from previous version
-    // GOES HERE
+    // GOES HERE.
     let old = try_from_slice_unchecked::<RectangleOld>(space).unwrap();
 
     // Copy the vaule and give back
