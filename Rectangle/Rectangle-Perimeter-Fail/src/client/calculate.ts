@@ -67,6 +67,7 @@ class Rectangle {
   width = 0;
   height = 0;
   area = 0;
+  perimeter = 0:
   constructor(fields: {width: number, height: number, area: number, perimeter: number} | undefined = undefined) {
     if (fields) {
       this.width = fields.width;
