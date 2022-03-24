@@ -1,6 +1,7 @@
 //! Program instruction processor
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
+    borsh::try_from_slice_unchecked,
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult, msg,
     pubkey::Pubkey,
@@ -41,7 +42,7 @@ pub fn process_instruction(
         return Err(ProgramError::IncorrectProgramId);
     }
 
-    let mut rectangle1 = Rectangle::try_from_slice_unchecked(&account.data.borrow())?;
+    let mut rectangle1 = try_from_slice_unchecked::<Rectangle>(&account.data.borrow())?;
     
     rectangle1.width = a;
     rectangle1.height = b;
