@@ -91,7 +91,10 @@ const RectangleSchema = new Map([
   ]
  ]);
 
-const Rectangle_SIZE = 1024;
+const Rectangle_SIZE = borsh.serialize(
+  RectangleSchema,
+  new Rectangle(),
+).length;
 
 /**
  * Establish a connection to the cluster
@@ -177,7 +180,7 @@ export async function checkProgram(): Promise<void> {
         seed: Rectangle_SEED,
         newAccountPubkey: RecPubkey,
         lamports,
-        space: Rectangle_SIZE,
+        space: 0,
         programId,
       }),
     );
