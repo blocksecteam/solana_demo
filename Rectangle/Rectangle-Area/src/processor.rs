@@ -40,12 +40,8 @@ pub fn process_instruction(
         msg!("Rectangle account does not have the correct program id");
         return Err(ProgramError::IncorrectProgramId);
     }
-    
-    let fulldata = &account.data.borrow();
-    
-    let slice = &fulldata[0..13]; 
 
-    let mut rectangle1 = Rectangle::try_from_slice(slice)?;
+    let mut rectangle1 = Rectangle::try_from_slice_unchecked(&account.data.borrow())?;
     
     rectangle1.width = a;
     rectangle1.height = b;
