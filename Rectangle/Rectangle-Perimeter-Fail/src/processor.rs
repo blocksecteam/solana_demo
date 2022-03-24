@@ -1,6 +1,7 @@
 //! Program instruction processor
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
+    borsh::try_from_slice_unchecked,
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult, msg,
     pubkey::Pubkey,
@@ -13,7 +14,7 @@ struct Rectangle {
     width: u32,
     height: u32,
     area: u32,
-    perimeter: u32,
+    perimeter: u32
 }
 
 impl Rectangle {
@@ -39,17 +40,19 @@ pub fn process_instruction(
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
 
-    // The account must be owned by the program in order to modify its data
+    // The account must be owned by the program in order to modify its data.
     if account.owner != _program_id {
         msg!("Rectangle account does not have the correct program id");
         return Err(ProgramError::IncorrectProgramId);
     }
+
+    let mut rectangle1 = try_from_slice_unchecked::<Rectangle>(&account.data.borrow())?;
     
-    let mut rectangle1 = Rectangle::try_from_slice(&account.data.borrow())?;
     rectangle1.width = a;
     rectangle1.height = b;
     rectangle1.area = rectangle1.area();
     rectangle1.perimeter = rectangle1.perimeter();
+    
     rectangle1.serialize(&mut &mut account.data.borrow_mut()[..])?;
     
 
