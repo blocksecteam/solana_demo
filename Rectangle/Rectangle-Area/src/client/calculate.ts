@@ -91,10 +91,7 @@ const RectangleSchema = new Map([
   ]
  ]);
 
-const Rectangle_SIZE = borsh.serialize(
-  RectangleSchema,
-  new Rectangle(),
-).length;
+const Rectangle_SIZE = 16;
 
 /**
  * Establish a connection to the cluster
