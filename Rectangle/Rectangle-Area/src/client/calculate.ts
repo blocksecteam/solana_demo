@@ -180,7 +180,7 @@ export async function checkProgram(): Promise<void> {
         seed: Rectangle_SEED,
         newAccountPubkey: RecPubkey,
         lamports,
-        space: 0,
+        space: Rectangle_SIZE,
         programId,
       }),
     );
