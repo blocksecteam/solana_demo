@@ -226,23 +226,25 @@ export async function calculate(): Promise<void> {
 /**
  * Report Results
  */
-export async function report(): Promise<void> {
-  const accountInfo = await connection.getAccountInfo(RecPubkey);
-  if (accountInfo === null) {
-    throw 'Error: cannot find the Rectangle account';
-  }
-  const rectangle1 = borsh.deserialize(
-    RectangleSchema,
-    Rectangle,
-    accountInfo.data,
-  );
-  console.log(
-    RecPubkey.toBase58(),
-    'width:',
-    rectangle1.width,
-    'height:',
-    rectangle1.height,
-    'area:',
-    rectangle1.area
-  );
-}
+//export async function report(): Promise<void> {
+//  const accountInfo = await connection.getAccountInfo(RecPubkey);
+//  if (accountInfo === null) {
+//    throw 'Error: cannot find the Rectangle account';
+//  }
+
+
+//  const rectangle1 = borsh.deserialize(
+//    RectangleSchema,
+//    Rectangle,
+//    accountInfo.data,
+//  );
+//  console.log(
+//    RecPubkey.toBase58(),
+//    'width:',
+//    rectangle1.width,
+//    'height:',
+//    rectangle1.height,
+//    'area:',
+//    rectangle1.area
+//  );
+//}

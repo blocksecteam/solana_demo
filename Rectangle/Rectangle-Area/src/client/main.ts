@@ -7,7 +7,7 @@ import {
   establishPayer,
   checkProgram,
   calculate,
-  report
+ //report
 } from './calculate';
 
 async function main() {
@@ -26,7 +26,7 @@ async function main() {
   await calculate();
   
   // report the result 
-  await report();
+  //await report();
 
   console.log('Success');
 }

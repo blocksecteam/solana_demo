@@ -41,7 +41,12 @@ pub fn process_instruction(
         return Err(ProgramError::IncorrectProgramId);
     }
     
-    let mut rectangle1 = Rectangle::try_from_slice(&account.data.borrow())?;
+    let fulldata = &account.data.borrow();
+    
+    let slice = &fulldata[0..13]; 
+
+    let mut rectangle1 = Rectangle::try_from_slice(slice)?;
+    
     rectangle1.width = a;
     rectangle1.height = b;
     rectangle1.area = rectangle1.area();
