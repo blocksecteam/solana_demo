@@ -60,18 +60,23 @@ pub fn process_instruction(
    let (b, rest) = unpack_u32(rest_a)?;
 
    match i {
-      0 => initialize(account, a, b),
-      1 => upgrade(account),
+      0 => initialize(accounts, a, b),
+      1 => upgrade(accounts),
    }
 
 }
 
 
 pub fn initialize(
-    account: &[AccountInfo],
+    accounts: &[AccountInfo],
     a: u32,
     b: u32,
 ) -> ProgramResult {
+    
+    let accounts_iter = &mut accounts.iter();
+
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
 
     let mut rectangle1 = try_from_slice_unchecked::<Rectangle>(&account.data.borrow())?;
     
@@ -89,10 +94,10 @@ pub fn initialize(
 
 
 pub fn upgrade(
-    account: &[AccountInfo],
+    accounts: &[AccountInfo],
 ) -> ProgramResult {
-
-    let mut update_account = conversion_logic(&account); 
+    
+    let mut update_account = conversion_logic(accounts); 
     
     update_account.perimeter = update_account.perimeter();
     
@@ -107,9 +112,13 @@ pub fn upgrade(
 }
 
 fn conversion_logic(
-    account: &[AccountInfo]
+    accounts: &[AccountInfo]
 ) -> Result<Rectangle, ProgramError> {
-    
+    let accounts_iter = &mut accounts.iter();
+
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
+
     let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
     
     Ok( Rectangle {
