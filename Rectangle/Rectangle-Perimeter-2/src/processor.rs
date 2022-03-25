@@ -34,6 +34,8 @@ impl CurrentRectangle {
     }
 }
 
+// Previous data size
+const PREVIOUS_DATA_SIZE: usize = mem::size_of::<OldRectangle>();
 
 
 
@@ -101,12 +103,12 @@ pub fn upgrade(
 
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
+ 
+    let mut account_data = account.data.borrow_mut();
 
-    let mut update_account = conversion_logic(accounts); 
+    let mut update_account = conversion_logic(&account_data); 
     
     update_account.perimeter = update_account.perimeter();
-    
-    let mut account_data = account.data.borrow_mut();
 
     let mut deref = account_data.deref_mut();
     
@@ -121,15 +123,19 @@ pub fn upgrade(
 
 
 fn conversion_logic(
-    accounts: &[AccountInfo]
+    account_data: &[u8]
     ) -> Result<CurrentRectangle, ProgramError> {
+    
+    let past = array_ref![account_data, 0, PREVIOUS_DATA_SIZE];
+    let (_, space) = array_refs![
+        past,
+        0,
+        PREVIOUS_DATA_SIZE
+    ];
+    // Logic to upgrade from previous version
+    // GOES HERE.
 
-    let accounts_iter = &mut accounts.iter();
-
-    // Get the account to say hello to
-    let account = next_account_info(accounts_iter)?;
-
-    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
+    let old = try_from_slice_unchecked::<OldRectangle>(space).unwrap();    
     
     Ok(CurrentRectangle{
         width: old.width,
