@@ -32,25 +32,9 @@ impl Rectangle {
     fn perimeter(&self) -> u32 {
         (self.width + self.height)*2
     }
-
-    fn conversion_logic(
-    accounts: &[AccountInfo]
-    ) -> Result<Self, ProgramError> {
-    let accounts_iter = &mut accounts.iter();
-
-    // Get the account to say hello to
-    let account = next_account_info(accounts_iter)?;
-
-    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
-    
-    Ok(Rectangle{
-        width: old.width,
-        height: old.height,
-        perimeter: 0,
-        area: old.area,
-    })
-
-}
+    fn result(accounts: &[AccountInfo]) -> Result<Self, ProgramError> {
+         conversion_logic(accounts)
+    }
 }
 
 
@@ -121,13 +105,13 @@ pub fn upgrade(
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
 
-    let mut update_account = accounts.conversion_logic(); 
+    let mut update_account = Rectangle::result.(accounts); 
     
     update_account.perimeter = update_account.perimeter();
     
     let mut account_data = account.data.borrow_mut();
     
-    let mut bw = BufWriter::new(& mut account_data);
+    let mut bw = BufWriter::new(&* mut account_data);
 
     update_account.serialize(&mut bw)?;
     
@@ -136,7 +120,25 @@ pub fn upgrade(
 }
 
 
+fn conversion_logic(
+    accounts: &[AccountInfo]
+    ) -> Result<Rectangle, ProgramError> {
 
+    let accounts_iter = &mut accounts.iter();
+
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
+
+    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
+    
+    Ok(Rectangle{
+        width: old.width,
+        height: old.height,
+        perimeter: 0,
+        area: old.area,
+    })
+
+}
 
 
 
