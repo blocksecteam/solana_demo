@@ -102,7 +102,7 @@ pub fn upgrade(
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
 
-    let mut update_account = Rectangle::result(accounts); 
+    let mut update_account = conversion_logic(accounts); 
     
     update_account.perimeter = update_account.perimeter();
     
