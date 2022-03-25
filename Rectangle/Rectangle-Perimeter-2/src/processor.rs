@@ -107,7 +107,7 @@ pub fn upgrade(
  
     let mut account_data = account.data.borrow_mut();
 
-    let mut update_account = conversion_logic(&account_data); 
+    let mut update_account = conversion_logic(&account_data)?; 
     
     update_account.perimeter = update_account.perimeter();
 
