@@ -7,10 +7,10 @@ use solana_program::{
     pubkey::Pubkey,
     program_error::ProgramError
 };
-use std::{convert::TryInto, mem, io::BufWriter};
+use std::{convert::TryInto, mem, io::BufWriter, ops::DerefMut};
 
 #[derive(BorshSerialize, BorshDeserialize, Debug, Default)]
-struct Rectangle {
+struct CurrentRectangle {
     width: u32,
     height: u32,
     perimeter: u32,
@@ -25,15 +25,12 @@ struct OldRectangle {
 }
 
 
-impl Rectangle {
+impl CurrentRectangle {
     fn area(&self) -> u32 {
         self.width * self.height
     }
     fn perimeter(&self) -> u32 {
         (self.width + self.height)*2
-    }
-    fn result(accounts: &[AccountInfo]) -> Result<Self, ProgramError> {
-         conversion_logic(accounts)
     }
 }
 
@@ -81,7 +78,7 @@ pub fn initialize(
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
 
-    let mut rectangle1 = try_from_slice_unchecked::<Rectangle>(&account.data.borrow())?;
+    let mut rectangle1 = try_from_slice_unchecked::<CurrentRectangle>(&account.data.borrow())?;
     
 
     rectangle1.width = a;
@@ -105,13 +102,15 @@ pub fn upgrade(
     // Get the account to say hello to
     let account = next_account_info(accounts_iter)?;
 
-    let mut update_account = Rectangle::result.(accounts); 
+    let mut update_account = Rectangle::result(accounts); 
     
     update_account.perimeter = update_account.perimeter();
     
     let mut account_data = account.data.borrow_mut();
+
+    let mut deref = account_data.deref_mut();
     
-    let mut bw = BufWriter::new(&* mut account_data);
+    let mut bw = BufWriter::new(deref);
 
     update_account.serialize(&mut bw)?;
     
@@ -122,7 +121,7 @@ pub fn upgrade(
 
 fn conversion_logic(
     accounts: &[AccountInfo]
-    ) -> Result<Rectangle, ProgramError> {
+    ) -> Result<CurrentRectangle, ProgramError> {
 
     let accounts_iter = &mut accounts.iter();
 
@@ -131,7 +130,7 @@ fn conversion_logic(
 
     let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
     
-    Ok(Rectangle{
+    Ok(CurrentRectangle{
         width: old.width,
         height: old.height,
         perimeter: 0,
