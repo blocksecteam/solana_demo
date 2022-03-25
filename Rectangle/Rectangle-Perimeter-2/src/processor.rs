@@ -10,6 +10,7 @@ use solana_program::{
 };
 use std::{convert::TryInto, mem, io::BufWriter, ops::DerefMut};
 
+/// current
 #[derive(BorshSerialize, BorshDeserialize, Debug, Default)]
 struct CurrentRectangle {
     width: u32,
@@ -18,6 +19,7 @@ struct CurrentRectangle {
     area: u32,
 }
 
+/// old 
 #[derive(BorshSerialize, BorshDeserialize, Debug, Default)]
 struct OldRectangle {
     width: u32,
@@ -35,7 +37,7 @@ impl CurrentRectangle {
     }
 }
 
-// Previous data size
+/// Previous data size
 const PREVIOUS_DATA_SIZE: usize = mem::size_of::<OldRectangle>();
 
 
@@ -73,7 +75,7 @@ pub fn process_instruction(
 
 }
 
-
+/// new account
 pub fn initialize(
     accounts: &[AccountInfo],
     a: u32,
@@ -99,7 +101,7 @@ pub fn initialize(
     Ok(())
 }
 
-
+/// upgrade 
 pub fn upgrade(
     accounts: &[AccountInfo],
 ) -> ProgramResult {
@@ -126,7 +128,7 @@ pub fn upgrade(
 }
 
 
-
+/// convert
 fn conversion_logic(
     account_data: &[u8]
     ) -> Result<CurrentRectangle, ProgramError> {
@@ -153,7 +155,7 @@ fn conversion_logic(
 
 
 
-
+/// unpack  
 fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
     if input.len() < 4 {
         msg!("u64 cannot be unpacked");
