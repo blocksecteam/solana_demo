@@ -7,15 +7,23 @@ use solana_program::{
     pubkey::Pubkey,
     program_error::ProgramError
 };
-use std::convert::TryInto;
+use std::{convert::TryInto, mem, io::BufWriter};
 
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
+#[derive(BorshSerialize, BorshDeserialize, Debug, Default)]
 struct Rectangle {
     width: u32,
     height: u32,
     perimeter: u32,
     area: u32,
 }
+
+#[derive(BorshSerialize, BorshDeserialize, Debug, Default)]
+struct OldRectangle {
+    width: u32,
+    height: u32,
+    area: u32,
+}
+
 
 impl Rectangle {
     fn area(&self) -> u32 {
@@ -26,15 +34,15 @@ impl Rectangle {
     }
 }
 
+
+
+
 /// Instruction processor
 pub fn process_instruction(
     _program_id: &Pubkey,
     accounts: &[AccountInfo],
     _instruction_data: &[u8],
 ) -> ProgramResult {
-    let (a, rest_b) = unpack_u32(_instruction_data)?;
-    let (b, rest) = unpack_u32(rest_b)?;
-
     let accounts_iter = &mut accounts.iter();
 
     // Get the account to say hello to
@@ -46,8 +54,28 @@ pub fn process_instruction(
         return Err(ProgramError::IncorrectProgramId);
     }
 
+   
+   let (i, rest_ab) = unpack_u32(_instruction_data)?;
+   let (a, rest_a) = unpack_u32(rest_ab)?;
+   let (b, rest) = unpack_u32(rest_a)?;
+
+   match i {
+      0 => initialize(account, a, b),
+      1 => upgrade(account),
+   }
+
+}
+
+
+pub fn initialize(
+    account: &[AccountInfo],
+    a: u32,
+    b: u32,
+) -> ProgramResult {
+
     let mut rectangle1 = try_from_slice_unchecked::<Rectangle>(&account.data.borrow())?;
     
+
     rectangle1.width = a;
     rectangle1.height = b;
     rectangle1.area = rectangle1.area();
@@ -58,6 +86,43 @@ pub fn process_instruction(
 
     Ok(())
 }
+
+
+pub fn upgrade(
+    account: &[AccountInfo],
+) -> ProgramResult {
+
+    let mut update_account = conversion_logic(&account); 
+    
+    update_account.perimeter = update_account.perimeter();
+    
+    let mut account_data = account.data.borrow_mut();
+    
+    let mut bw = BufWriter::new(& mut account_data);
+
+    update_account.serialize(&mut bw)?;
+    
+    
+    Ok(())
+}
+
+fn conversion_logic(
+    account: &[AccountInfo]
+) -> Result<Rectangle, ProgramError> {
+    
+    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
+    
+    Ok( Rectangle {
+        width: old.width,
+        height: old.height,
+        perimeter: 0,
+        area: old.area,
+    })
+
+
+}
+
+
 
 fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
     if input.len() < 4 {

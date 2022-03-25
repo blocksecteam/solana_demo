@@ -22,6 +22,20 @@ impl Rectangle {
     }
 }
 
+fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
+    if input.len() < 4 {
+        msg!("u64 cannot be unpacked");
+        return Err(ProgramError::InvalidInstructionData);
+    }
+    let (bytes, rest) = input.split_at(4);
+    let value = bytes
+        .get(..4)
+        .and_then(|slice| slice.try_into().ok())
+        .map(u32::from_le_bytes)
+        .ok_or(ProgramError::InvalidInstructionData)?;
+    Ok((value, rest))
+}
+
 /// Instruction processor
 pub fn process_instruction(
     _program_id: &Pubkey,
@@ -54,16 +68,3 @@ pub fn process_instruction(
     Ok(())
 }
 
-fn unpack_u32(input: &[u8]) -> Result<(u32, &[u8]), ProgramError> {
-    if input.len() < 4 {
-        msg!("u64 cannot be unpacked");
-        return Err(ProgramError::InvalidInstructionData);
-    }
-    let (bytes, rest) = input.split_at(4);
-    let value = bytes
-        .get(..4)
-        .and_then(|slice| slice.try_into().ok())
-        .map(u32::from_le_bytes)
-        .ok_or(ProgramError::InvalidInstructionData)?;
-    Ok((value, rest))
-}

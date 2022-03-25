@@ -15,6 +15,7 @@ import {
 import {
   struct,
   u32,
+  string,
 } from '@solana/buffer-layout';
 
 import fs from 'mz/fs';
@@ -194,24 +195,24 @@ export async function checkProgram(): Promise<void> {
 export async function calculate(): Promise<void> {
 
   let allocateStruct = {
-        // index: 0,
         layout: struct([
-            // u8('instruction'),
+            u32('instruction'),
             u32('a'),
             u32('b'),
         ])
     };
 
+
   let data = Buffer.alloc(allocateStruct.layout.span);
-  let layoutFields = Object.assign({ a: 5, b: 10 });
+  let layoutFields = Object.assign({ instruction: 1, a: 5, b: 10 });
   allocateStruct.layout.encode(layoutFields, data);
 
   
   const instruction = new TransactionInstruction({
+    programId,
     keys: [
       {pubkey: RecPubkey, isSigner: false, isWritable: true}
     ],
-    programId,
     data: data, 
   });
 
@@ -231,12 +232,12 @@ export async function report(): Promise<void> {
     throw 'Error: cannot find the Rectangle account';
   }
 
-
   const rectangle1 = deserializeUnchecked(
     RectangleSchema,
     Rectangle,
     accountInfo.data,
   );
+
   console.log(
     RecPubkey.toBase58(),
     'width:',
