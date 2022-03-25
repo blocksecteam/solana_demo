@@ -15,7 +15,6 @@ import {
 import {
   struct,
   u32,
-  string,
 } from '@solana/buffer-layout';
 
 import fs from 'mz/fs';
@@ -68,8 +67,8 @@ class Rectangle {
   width = 0;
   height = 0;
   area = 0;
-  perimeter = 0:
-  constructor(fields: {width: number, height: number, area: number, perimeter: number} | undefined = undefined) {
+  perimeter = 0;
+  constructor(fields: {width: number, height: number, perimeter: number, area: number} | undefined = undefined) {
     if (fields) {
       this.width = fields.width;
       this.height = fields.height;
@@ -87,8 +86,8 @@ const RectangleSchema = new Map([
           fields: [
               ['width', 'u32'],
               ['height', 'u32'],
+              ['perimeter', 'u32'],
               ['area', 'u32'],
-              ['perimeter', 'u32']
           ]
       }
   ]
@@ -244,9 +243,9 @@ export async function report(): Promise<void> {
     rectangle1.width,
     'height:',
     rectangle1.height,
+    'perimeter:',
+    rectangle1.perimeter,
     'area:',
     rectangle1.area,
-    'perimeter:',
-    rectangle1.perimeter
   );
 }
