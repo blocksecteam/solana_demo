@@ -66,7 +66,8 @@ pub fn process_instruction(
       0 => initialize(accounts, a, b),
       1 => upgrade(accounts),
       _ => {
-        msg!("No such option")
+        msg!("No such option");
+        return Err();
       }
    }
 
