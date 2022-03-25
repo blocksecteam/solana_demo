@@ -67,7 +67,7 @@ pub fn process_instruction(
       1 => upgrade(accounts),
       _ => {
         msg!("No such option");
-        return Err();
+        return Err(ProgramError::InvalidArgument);
       }
    }
 
