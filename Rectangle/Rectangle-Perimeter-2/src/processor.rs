@@ -1,4 +1,5 @@
 //! Program instruction processor
+use arrayref::{array_ref, array_refs};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
