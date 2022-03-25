@@ -32,6 +32,25 @@ impl Rectangle {
     fn perimeter(&self) -> u32 {
         (self.width + self.height)*2
     }
+
+    fn conversion_logic(
+    accounts: &[AccountInfo]
+    ) -> Result<Self, ProgramError> {
+    let accounts_iter = &mut accounts.iter();
+
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
+
+    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
+    
+    Ok(Rectangle{
+        width: old.width,
+        height: old.height,
+        perimeter: 0,
+        area: old.area,
+    })
+
+}
 }
 
 
@@ -97,7 +116,12 @@ pub fn upgrade(
     accounts: &[AccountInfo],
 ) -> ProgramResult {
     
-    let mut update_account = conversion_logic(accounts); 
+    let accounts_iter = &mut accounts.iter();
+
+    // Get the account to say hello to
+    let account = next_account_info(accounts_iter)?;
+
+    let mut update_account = accounts.conversion_logic(); 
     
     update_account.perimeter = update_account.perimeter();
     
@@ -111,24 +135,9 @@ pub fn upgrade(
     Ok(())
 }
 
-fn conversion_logic(
-    accounts: &[AccountInfo]
-) -> Result<Rectangle, ProgramError> {
-    let accounts_iter = &mut accounts.iter();
 
-    // Get the account to say hello to
-    let account = next_account_info(accounts_iter)?;
 
-    let old = try_from_slice_unchecked::<OldRectangle>(&account.data.borrow())?;    
-    
-    Ok( Rectangle {
-        width: old.width,
-        height: old.height,
-        perimeter: 0,
-        area: old.area,
-    })
 
-}
 
 
 
