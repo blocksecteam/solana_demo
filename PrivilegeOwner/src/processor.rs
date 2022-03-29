@@ -26,19 +26,19 @@ pub fn process_instruction(
              key: Pubkey
         } => {
             msg!("Instruction: InitializeDoor");
-            Self::InitializeDoor(accounts, key)
+            InitializeDoor(accounts, key)
         }
         DoorInstruction::InitializeAccount => {
             msg!("Instruction: InitializeAccount");
-            Self::InitializeAccount(program_id, accounts)
+            InitializeAccount(program_id, accounts)
         }
         DoorInstruction::Open => {
             msg!("Instruction: Open");
-            Self::Open(program_id, accounts)
+            Open(program_id, accounts)
         }
         DoorInstruction::Close => {
             msg!("Instruction: Close");
-            Self::Close(program_id, accounts)
+            Close(program_id, accounts)
         }
      }
 }
@@ -64,6 +64,8 @@ pub fn InitializeDoor(
      
      /// serializing
      Door::pack(door, &mut account_info.data.borrow_mut())?;
+     
+     msg!("Door is initialzed, and the key address is {}!", door.key);
 
      Ok(())
 }
@@ -78,7 +80,7 @@ pub fn InitializeAccount(
     let door_info = next_account_info(account_info_iter)?;
     let owner = next_account_info(account_info_iter)?;
     
-    Self::check_account_owner(program_id, door_info)?;
+    check_account_owner(program_id, door_info)?;
     /// deserializing
     let mut account = Account::unpack_unchecked(&new_account_info.data.borrow())?;
     if account.is_initialized() {
@@ -103,13 +105,13 @@ pub fn Open(
     let account_info = next_account_info(account_info_iter)?;
     let owner_info = next_account_info(account_info_iter)?;
     
-    Self::check_account_owner(program_id, door_info)?;
+    check_account_owner(program_id, door_info)?;
     /// deserializing
     let mut account = Account::unpack(&account_info.data.borrow())?;
-    if !Self::cmp_pubkeys(door_info.key, &account.door) {
+    if !cmp_pubkeys(door_info.key, &account.door) {
             return Err(ProgramError::InvalidArgument);
     }
-    if !Self::cmp_pubkeys(owner_info.key, &account.owner) {
+    if !cmp_pubkeys(owner_info.key, &account.owner) {
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -117,7 +119,7 @@ pub fn Open(
 
     let expected_owner = door.key;
 
-    Self::validate_owner(expected_owner, owner_info)?;
+    validate_owner(expected_owner, owner_info)?;
     
     if  door.is_opened {
         return Err(ProgramError::InvalidArgument);
@@ -147,13 +149,13 @@ pub fn Close(
     let account_info = next_account_info(account_info_iter)?;
     let owner_info = next_account_info(account_info_iter)?;
     
-    Self::check_account_owner(program_id, door_info)?;
+    check_account_owner(program_id, door_info)?;
     /// deserializing
     let mut account = Account::unpack(&account_info.data.borrow())?;
-    if !Self::cmp_pubkeys(door_info.key, &account.door) {
+    if !cmp_pubkeys(door_info.key, &account.door) {
         return Err(ProgramError::InvalidArgument);
     }
-    if !Self::cmp_pubkeys(owner_info.key, &account.owner) {
+    if !cmp_pubkeys(owner_info.key, &account.owner) {
         return Err(ProgramError::InvalidArgument);
     }
     
@@ -161,7 +163,7 @@ pub fn Close(
 
     let expected_owner = door.key;
 
-    Self::validate_owner(expected_owner, owner_info);
+    validate_owner(expected_owner, owner_info);
     
     if !door.is_opened {
         return Err(ProgramError::InvalidArgument);
@@ -187,7 +189,7 @@ pub fn validate_owner(
     expected_owner: &Pubkey,
     owner_account_info: &AccountInfo,
 ) -> ProgramResult {
-    if !Self::cmp_pubkeys(expected_owner, owner_account_info.key) {
+    if cmp_pubkeys(expected_owner, owner_account_info.key) {
         return Err(ProgramError::InvalidArgument);
     }
     if !owner_account_info.is_signer {
@@ -199,7 +201,7 @@ pub fn validate_owner(
 
 // Checks that the account is owned by the expected program
 pub fn check_account_owner(program_id: &Pubkey, account_info: &AccountInfo) -> ProgramResult {
-    if !Self::cmp_pubkeys(program_id, account_info.owner) {
+    if cmp_pubkeys(program_id, account_info.owner) {
         Err(ProgramError::IncorrectProgramId)
     } else {
         Ok(())
