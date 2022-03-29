@@ -6,7 +6,7 @@ use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program_memory::{sol_memcmp, sol_memset},
     entrypoint::ProgramResult, msg,
-    pubkey::Pubkey,
+    pubkey::{Pubkey,PUBKEY_BYTES},
     program_error::ProgramError
 };
 use std::convert::TryInto;
@@ -63,7 +63,7 @@ pub fn InitializeDoor(
      door.is_opened = false;
      
      /// serializing
-     Door::pack(door, &mut account_info.data.borrow_mut())?;
+     Door::pack(door, &mut door_info.data.borrow_mut())?;
      
      msg!("Door is initialzed, and the key address is {}!", door.key);
 

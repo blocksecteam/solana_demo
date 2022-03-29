@@ -73,7 +73,7 @@ impl Pack for Door {
 
 /// Account
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
-struct Account {
+pub struct Account {
     /// The door associated with this account
     door: Pubkey,
 
