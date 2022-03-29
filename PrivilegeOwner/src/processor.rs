@@ -65,8 +65,6 @@ pub fn InitializeDoor(
      
      /// serializing
      Door::pack(door, &mut door_info.data.borrow_mut())?;
-     
-     msg!("Door is initialzed, and the key address is {}!", key);
 
      Ok(())
 }
