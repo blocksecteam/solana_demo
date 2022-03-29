@@ -24,7 +24,7 @@ impl DoorInstruction {
         Ok(match tag {
             0 => {
                 let (key, _rest) = Self::unpack_pubkey(rest)?;
-                Self::InitializeDoor {key}
+                Self::InitializeDoor { key }
             }
             1 => {
                 Self::InitializeAccount
