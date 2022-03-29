@@ -11,9 +11,13 @@ use std::mem::size_of;
 /// Instructions supported by the lending program.
 // #[derive(Clone, Debug, PartialEq)]
 pub enum DoorInstruction {
+    /// InitializeDoor
     InitializeDoor {key: Pubkey},
+    /// InitializeAccount
     InitializeAccount,
+    /// Open
     Open,
+    /// Close
     Close,
 }
 
@@ -41,7 +45,7 @@ impl DoorInstruction {
             }
         })
     }
-
+    /// unpack pubkey
     pub fn unpack_pubkey(input: &[u8]) -> Result<(Pubkey, &[u8]), ProgramError> {
         if input.len() < PUBKEY_BYTES {
             msg!("Pubkey cannot be unpacked");

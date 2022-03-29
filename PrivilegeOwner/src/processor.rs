@@ -201,7 +201,7 @@ pub fn validate_owner(
     Ok(())
 }
 
-// Checks that the account is owned by the expected program
+/// Checks that the account is owned by the expected program
 pub fn check_account_owner(program_id: &Pubkey, account_info: &AccountInfo) -> ProgramResult {
     if cmp_pubkeys(program_id, account_info.owner) {
         Err(ProgramError::IncorrectProgramId)
@@ -211,7 +211,7 @@ pub fn check_account_owner(program_id: &Pubkey, account_info: &AccountInfo) -> P
 }
 
 /// Checks two pubkeys for equality in a computationally cheap way using
-    /// `sol_memcmp`
+/// `sol_memcmp`
 pub fn cmp_pubkeys(a: &Pubkey, b: &Pubkey) -> bool {
     sol_memcmp(a.as_ref(), b.as_ref(), PUBKEY_BYTES) == 0
 }
