@@ -12,9 +12,9 @@ use std::mem::size_of;
 // #[derive(Clone, Debug, PartialEq)]
 pub enum DoorInstruction {
     InitializeDoor {key: Pubkey},
-    InitializeAccount,
-    Open,
-    Close,
+    InitializeAccount {},
+    Open {},
+    Close {},
 }
 
 impl DoorInstruction {
