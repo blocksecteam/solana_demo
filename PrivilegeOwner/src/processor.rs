@@ -23,7 +23,7 @@ pub fn process_instruction(
 
     match instruction {
         DoorInstruction::InitializeDoor {
-             key: Pubkey
+             key
         } => {
             msg!("Instruction: InitializeDoor");
             InitializeDoor(accounts, key)
