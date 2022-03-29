@@ -121,7 +121,7 @@ pub fn Open(
 
     let expected_owner = door.key;
 
-    validate_owner(expected_owner, owner_info)?;
+    validate_owner(&expected_owner, owner_info)?;
     
     if  door.is_opened {
         return Err(ProgramError::InvalidArgument);
@@ -165,7 +165,7 @@ pub fn Close(
 
     let expected_owner = door.key;
 
-    validate_owner(expected_owner, owner_info);
+    validate_owner(&expected_owner, owner_info);
     
     if !door.is_opened {
         return Err(ProgramError::InvalidArgument);

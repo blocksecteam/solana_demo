@@ -75,13 +75,13 @@ impl Pack for Door {
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct Account {
     /// The door associated with this account
-    door: Pubkey,
+    pub door: Pubkey,
 
     /// The owner of the account 
-    owner: Pubkey,
+    pub owner: Pubkey,
 
     /// Default to false  
-    is_initialized: bool
+    pub is_initialized: bool
 }
 
 
