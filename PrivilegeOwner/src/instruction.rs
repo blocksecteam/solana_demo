@@ -12,9 +12,9 @@ use std::mem::size_of;
 // #[derive(Clone, Debug, PartialEq)]
 pub enum DoorInstruction {
     InitializeDoor {key: Pubkey},
-    InitializeAccount {},
-    Open {},
-    Close {},
+    InitializeAccount,
+    Open,
+    Close,
 }
 
 impl DoorInstruction {
@@ -27,13 +27,13 @@ impl DoorInstruction {
                 Self::InitializeDoor {key}
             }
             1 => {
-                Self::InitializeAccount {}
+                Self::InitializeAccount
             }
             2 => {
-                Self::Open {}
+                Self::Open
             }
             3 => {
-                Self::Close {}
+                Self::Close
             }
             _ => {
                 msg!("Instruction cannot be unpacked");
