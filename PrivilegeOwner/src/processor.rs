@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Door, Account}, instruction};
+use crate::{state::{Door, Account}, instruction::DoorInstruction};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
@@ -76,7 +76,7 @@ pub fn InitializeAccount(
     let account_info_iter = &mut accounts.iter();
     let new_account_info = next_account_info(account_info_iter)?;
     let door_info = next_account_info(account_info_iter)?;
-    let owner = next_account_info(account_info_iter)?
+    let owner = next_account_info(account_info_iter)?;
     
     Self::check_account_owner(program_id, door_info)?;
     /// deserializing
