@@ -89,6 +89,7 @@ pub fn InitializeAccount(
 
     account.door = *door_info.key;
     account.owner = *owner.key; 
+    account.is_initialized = true;
 
     Account::pack(account, &mut new_account_info.data.borrow_mut())?;
 

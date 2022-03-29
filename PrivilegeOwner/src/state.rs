@@ -78,40 +78,52 @@ struct Account {
     door: Pubkey,
 
     /// The owner of the account 
-    owner: Pubkey
+    owner: Pubkey,
+
+    /// Default to false  
+    is_initialized: bool
 }
 
 
 impl Sealed for Account {}
 impl IsInitialized for Account {
     fn is_initialized(&self) -> bool {
-        self.state != AccountState::Uninitialized
+        self.is_initialized
     }
 }
 
 impl Pack for Account {
-    const LEN: usize = 64;
+    const LEN: usize = 65;
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
-        let src = array_ref![src, 0, 64];
-        let (door, owner) =
-            array_refs![src, 32, 32];
+        let src = array_ref![src, 0, 65];
+        let (door, owner, is_initialized) =
+            array_refs![src, 32, 32, 1];
+        
+        let is_initialized = match is_initialized {
+            [0] => false,
+            [1] => true,
+            _ => return Err(ProgramError::InvalidAccountData),
+        };
 
         Ok(Account {
             door: Pubkey::new_from_array(*door),
             owner: Pubkey::new_from_array(*owner),
+            is_initialized: is_initialized,
         })
     }
     fn pack_into_slice(&self, dst: &mut [u8]) {
-        let dst = array_mut_ref![dst, 0, 64];
-        let (door_dst, owner_dst) = 
+        let dst = array_mut_ref![dst, 0, 65];
+        let (door_dst, owner_dst, is_initialized_dst) = 
              mut_array_refs![dst, 32, 32];
 
         let &Account {
             ref door,
             ref owner,
+            is_initialized,
         } = self;
 
         door_dst.copy_from_slice(door.as_ref());
-        owner_dst.copy_from_slice(owner.as_ref())
+        owner_dst.copy_from_slice(owner.as_ref());
+        is_initialized_dst[0] = is_initialized as u8;
     }
 }
