@@ -114,7 +114,7 @@ impl Pack for Account {
     fn pack_into_slice(&self, dst: &mut [u8]) {
         let dst = array_mut_ref![dst, 0, 65];
         let (door_dst, owner_dst, is_initialized_dst) = 
-             mut_array_refs![dst, 32, 32];
+             mut_array_refs![dst, 32, 32, 1];
 
         let &Account {
             ref door,
