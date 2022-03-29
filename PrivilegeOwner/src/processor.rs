@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Door, Account}, instruction}
+use crate::{state::{Door, Account}, instruction};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
