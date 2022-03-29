@@ -15,7 +15,7 @@ import {
 import {
   struct,
   u8,
-  publicKey
+  PublicKey
 } from '@solana/buffer-layout';
 
 import fs from 'mz/fs';
