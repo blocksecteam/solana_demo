@@ -297,7 +297,7 @@ export async function open(): Promise<void> {
   const data = Buffer.alloc(openInstructionData.span);
   openInstructionData.encode(
       {
-        instruction: 3,   
+        instruction: 2,   
       },
       data
   );
@@ -338,7 +338,7 @@ export async function close(): Promise<void> {
   const data = Buffer.alloc(closeInstructionData.span);
   closeInstructionData.encode(
       {
-        instruction: 4,   
+        instruction: 3,   
       },
       data
   );
