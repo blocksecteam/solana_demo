@@ -189,7 +189,7 @@ pub fn validate_owner(
     expected_owner: &Pubkey,
     owner_account_info: &AccountInfo,
 ) -> ProgramResult {
-    if cmp_pubkeys(expected_owner, owner_account_info.key) {
+    if !cmp_pubkeys(expected_owner, owner_account_info.key) {
         return Err(ProgramError::InvalidArgument);
     }
     if !owner_account_info.is_signer {
