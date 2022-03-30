@@ -30,7 +30,7 @@ impl IsInitialized for Door {
 }
 
 impl Pack for Door {
-    const LEN: usize = 34;
+    const LEN: usize = 1024;
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
         let src = array_ref![src, 0, 34];
         let (key, is_initialized, is_opened) =
@@ -94,7 +94,7 @@ impl IsInitialized for Account {
 }
 
 impl Pack for Account {
-    const LEN: usize = 65;
+    const LEN: usize = 1024;
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
         let src = array_ref![src, 0, 65];
         let (door, owner, is_initialized) =
