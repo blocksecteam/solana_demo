@@ -34,7 +34,7 @@ impl Pack for Door {
         let src = array_ref![src, 0, 34];
         let (key, is_initialized, is_opened) =
             array_refs![src, 32, 1, 1];
-
+        msg!("key: {:?}", key);
         let is_initialized = match is_initialized {
             [0] => false,
             [1] => true,
