@@ -201,7 +201,7 @@ pub fn validate_owner(
 
 /// Checks that the account is owned by the expected program
 pub fn check_account_owner(program_id: &Pubkey, account_info: &AccountInfo) -> ProgramResult {
-    if cmp_pubkeys(program_id, account_info.owner) {
+    if !cmp_pubkeys(program_id, account_info.owner) {
         Err(ProgramError::IncorrectProgramId)
     } else {
         Ok(())
