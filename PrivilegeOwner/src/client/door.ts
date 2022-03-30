@@ -15,8 +15,11 @@ import {
 import {
   struct,
   u8,
-  PublicKey
 } from '@solana/buffer-layout';
+
+import {
+  publicKey
+} from '@solana/buffer-layout-utils';
 
 import fs from 'mz/fs';
 import path from 'path';
@@ -67,7 +70,6 @@ const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner.so');
  * This file is created when running `solana program deploy dist/program/PrivilegeOwner.so`
  */
 const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner-keypair.json');
-
 
 
 
@@ -200,23 +202,29 @@ export async function createAccount(): Promise<void> {
 }
 
 
+export interface InitializeDoorInstructionData {
+    instruction: number;
+    key: PublicKey;
+}
+
+export const initializeDoorInstructionData = struct<InitializeDoorInstructionData>([
+    u8('instruction'),
+    publicKey('key'),
+]);
+
 /**
  *  InitializeDoor  
  */
 export async function InitializeDoor(): Promise<void> {
 
-  let allocateStruct = {
-        tag: 0,
-        layout: struct([
-            u8('instruction'),
-            publicKey('a'),
-        ])
-    };
-
-  let data = Buffer.alloc(allocateStruct.layout.span);
-  let layoutFields = Object.assign({ instruction: allocateStruct.tag, a: payer.publicKey });
-  allocateStruct.layout.encode(layoutFields, data);
-
+  const data = Buffer.alloc(initializeDoorInstructionData.span);
+  initializeDoorInstructionData.encode(
+      {
+        instruction: 0,
+        key: payer.publicKey,   
+      },
+      data
+  );
   
   const instruction = new TransactionInstruction({
     keys: [
@@ -233,22 +241,26 @@ export async function InitializeDoor(): Promise<void> {
   );
 }
 
+
+export interface InitializeAccountInstructionData {
+    instruction: number;
+}
+
+export const initializeAccountInstructionData = struct<InitializeAccountInstructionData>([
+    u8('instruction'),
+]);
 /**
  *  InitializeAccount  
  */
 export async function InitializeAccount(): Promise<void> {
 
-  let allocateStruct = {
-        tag: 1,
-        layout: struct([
-            u8('instruction'),
-            //publicKey('a'),
-        ])
-    };
-
-  let data = Buffer.alloc(allocateStruct.layout.span);
-  let layoutFields = Object.assign({ instruction: allocateStruct.tag });
-  allocateStruct.layout.encode(layoutFields, data);
+  const data = Buffer.alloc(initializeAccountInstructionData.span);
+  initializeAccountInstructionData.encode(
+      {
+        instruction: 1,   
+      },
+      data
+  );
 
   
   const instruction = new TransactionInstruction({
@@ -268,22 +280,27 @@ export async function InitializeAccount(): Promise<void> {
   );
 }
 
+
+
+export interface OpenInstructionData {
+    instruction: number;
+}
+
+export const openInstructionData = struct<OpenInstructionData>([
+    u8('instruction'),
+]);
 /**
  *  Open the door   
  */
 export async function open(): Promise<void> {
 
-  let allocateStruct = {
-        tag: 2,
-        layout: struct([
-            u8('instruction'),
-            //publicKey('a'),
-        ])
-    };
-
-  let data = Buffer.alloc(allocateStruct.layout.span);
-  let layoutFields = Object.assign({ instruction: allocateStruct.tag });
-  allocateStruct.layout.encode(layoutFields, data);
+  const data = Buffer.alloc(openInstructionData.span);
+  openInstructionData.encode(
+      {
+        instruction: 3,   
+      },
+      data
+  );
 
   
   const instruction = new TransactionInstruction({
@@ -303,22 +320,28 @@ export async function open(): Promise<void> {
   );
 }
 
+
+
+
+export interface CloseInstructionData {
+    instruction: number;
+}
+
+export const closeInstructionData = struct<CloseInstructionData>([
+    u8('instruction'),
+]);
 /**
  *  close the door   
  */
 export async function close(): Promise<void> {
 
-  let allocateStruct = {
-        tag: 3,
-        layout: struct([
-            u8('instruction'),
-            //publicKey('a'),
-        ])
-    };
-
-  let data = Buffer.alloc(allocateStruct.layout.span);
-  let layoutFields = Object.assign({ instruction: allocateStruct.tag });
-  allocateStruct.layout.encode(layoutFields, data);
+  const data = Buffer.alloc(closeInstructionData.span);
+  closeInstructionData.encode(
+      {
+        instruction: 4,   
+      },
+      data
+  );
 
   
   const instruction = new TransactionInstruction({
