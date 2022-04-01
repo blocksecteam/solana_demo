@@ -63,13 +63,13 @@ const PROGRAM_PATH = path.resolve(__dirname, '../../dist/program');
  *   - `npm run build:program-c`
  *   - `npm run build:program-rust`
  */
-const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner-Attack.so');
+const PROGRAM_SO_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner_Attack.so');
 
 /**
  * Path to the keypair of the deployed program.
- * This file is created when running `solana program deploy dist/program/PrivilegeOwner-Attack.so`
+ * This file is created when running `solana program deploy dist/program/PrivilegeOwner_Attack.so`
  */
-const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner-Attack-keypair.json');
+const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'PrivilegeOwner_Attack_keypair.json');
 
 
 
