@@ -5,6 +5,7 @@
 import {
   establishConnection,
   establishPayer,
+  checkProgram
   allocate,
 } from './allocate';
 
@@ -16,7 +17,8 @@ async function main() {
 
   // Determine who pays for the fees
   await establishPayer();
-
+  
+  await checkProgram();
 
   // allocate the account;
   await allocate();
