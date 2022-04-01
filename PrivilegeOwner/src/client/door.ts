@@ -200,7 +200,9 @@ export async function createConfig(): Promise<void> {
     let syskey = SystemProgram.programId;
 
     const instruction = new TransactionInstruction({
-    keys: [{pubkey: syskey, isSigner: false, isWritable: false},{pubkey: ConfigPubkey, isSigner: false, isWritable: true}],
+    keys: [{pubkey: syskey, isSigner: false, isWritable: false},
+    {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
+    {pubkey: payer.publicKey, isSigner: true, isWritable: false}],
     programId,
     data: data, 
   });
@@ -209,12 +211,13 @@ export async function createConfig(): Promise<void> {
     new Transaction().add(instruction),
     [payer],
     );
-  }
-  else {console.log(
+  } else {
+     console.log(
       'Using account',
       ConfigPubkey.toBase58(),
       'to store the data',
-    ); } 
+    ); 
+   } 
 }
 
 

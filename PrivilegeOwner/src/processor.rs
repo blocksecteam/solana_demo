@@ -286,6 +286,8 @@ pub fn AllocatePDA(
     // Account info to allocate
     let allocated_info = next_account_info(account_info_iter)?;
 
+    let owner_info = next_account_info(account_info_iter)?;
+
     let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
     
@@ -296,7 +298,13 @@ pub fn AllocatePDA(
 
     // Invoke the system program to allocate account data
     invoke_signed(
-        &system_instruction::allocate(allocated_info.key, SIZE as u64),
+        &system_instruction::create_account(
+            &owner_info.key,
+            &allocated_info.key,
+            1,
+            SIZE as u64,
+            &program_id, 
+            ),
         // Order doesn't matter and this slice could include all the accounts and be:
         // `&accounts`
         &[
