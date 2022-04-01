@@ -212,7 +212,7 @@ export async function createConfig(): Promise<void> {
   }
   else {console.log(
       'Using account',
-      Config_Account.publicKey.toBase58(),
+      ConfigPubkey.toBase58(),
       'to store the data',
     ); } 
 }
