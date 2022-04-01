@@ -301,7 +301,8 @@ pub fn AllocatePDA(
         &system_instruction::create_account(
             &owner_info.key,
             &allocated_info.key,
-            1024,
+            /// lamports
+            80179200,
             SIZE as u64,
             &program_id, 
             ),
