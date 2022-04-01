@@ -130,7 +130,7 @@ pub fn Lock(
      
     check_account_owner(program_id, config_info)?;
     /// deserializing
-    let mut config = Config::unpack(&config_info.data.borrow())?;
+    let mut config = Config::unpack_unchecked(&config_info.data.borrow())?;
     if !cmp_pubkeys(admin_info.key, &config.admin) {
         return Err(ProgramError::InvalidArgument);
     }
@@ -166,7 +166,7 @@ pub fn Unlock(
      
     check_account_owner(program_id, config_info)?;
     /// deserializing
-    let mut config = Config::unpack(&config_info.data.borrow())?;
+    let mut config = Config::unpack_unchecked(&config_info.data.borrow())?;
     if !cmp_pubkeys(admin_info.key, &config.admin) {
         return Err(ProgramError::InvalidArgument);
     }
@@ -205,14 +205,14 @@ pub fn Open(
     check_account_owner(program_id, config_info)?;
 
     /// deserializing
-    let mut config = Config::unpack(&config_info.data.borrow())?;
+    let mut config = Config::unpack_unchecked(&config_info.data.borrow())?;
 
     if config.is_locked {
         return Err(ProgramError::InvalidArgument);
     } 
     
 
-    let mut door = Door::unpack(&door_info.data.borrow())?;
+    let mut door = Door::unpack_unchecked(&door_info.data.borrow())?;
 
     let expected_owner = door.key;
 
@@ -246,13 +246,13 @@ pub fn Close(
     check_account_owner(program_id, config_info)?;
     
     /// deserializing
-    let mut config = Config::unpack(&config_info.data.borrow())?;
+    let mut config = Config::unpack_unchecked(&config_info.data.borrow())?;
     
     if config.is_locked {
         return Err(ProgramError::InvalidArgument);
     } 
 
-    let mut door = Door::unpack(&door_info.data.borrow())?;
+    let mut door = Door::unpack_unchecked(&door_info.data.borrow())?;
 
     let expected_owner = door.key;
 
