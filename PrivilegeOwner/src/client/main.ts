@@ -6,9 +6,11 @@ import {
   establishConnection,
   establishPayer,
   checkProgram,
-  createAccount,
+  createConfig,
   InitializeDoor,
-  InitializeAccount,
+  InitializeConfig,
+  lock,
+  unlock,
   open,
   close,
 } from './door';
@@ -32,7 +34,13 @@ async function main() {
   await InitializeDoor();
 
   // Initialize Account 
-  await InitializeAccount();
+  await InitializeConfig();
+
+  // Lock the door 
+  await lock();
+
+  // Unlock the door
+  await unlock();
   
   // open 
   await open();

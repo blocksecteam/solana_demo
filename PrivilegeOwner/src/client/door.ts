@@ -335,9 +335,9 @@ export const unlockInstructionData = struct<UnLockInstructionData>([
 
 
 /**
- *  Lock the door   
+ *  unlock the door   
  */
-export async function lock(): Promise<void> {
+export async function unlock(): Promise<void> {
 
   const data = Buffer.alloc(unlockInstructionData.span);
   unlockInstructionData.encode(
