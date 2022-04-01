@@ -5,7 +5,7 @@
 import {
   establishConnection,
   establishPayer,
-  checkProgram
+  checkProgram,
   allocate,
 } from './allocate';
 
