@@ -146,8 +146,14 @@ export async function checkProgram(): Promise<void> {
       DoorPubkey.toBase58(),
       'to store the data',
     );
+
     const lamports = await connection.getMinimumBalanceForRentExemption(
       1024,
+    );
+    
+    console.log(
+      'lamports',
+      lamports
     );
     
     const transaction = new Transaction().add(
@@ -183,10 +189,7 @@ export async function createConfig(): Promise<void> {
       },
       data
   );
-  console.log(
-      'lamports',
-      lamports
-    );
+  
 
   let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
  
