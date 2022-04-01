@@ -210,11 +210,11 @@ export async function createConfig(): Promise<void> {
     [payer],
     );
   }
-  console.log(
+  else {console.log(
       'Using account',
-      ConfigPubkey.toBase58(),
+      Config_Account.publicKey.toBase58(),
       'to store the data',
-    );
+    ); } 
 }
 
 
