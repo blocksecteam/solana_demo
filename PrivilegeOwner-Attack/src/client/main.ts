@@ -9,7 +9,7 @@ import {
 } from './allocate';
 
 async function main() {
-  console.log("Let's allocate an PDA account");
+  console.log("Let's create a fake account ");
 
   // Establish connection to the cluster
   await establishConnection();
