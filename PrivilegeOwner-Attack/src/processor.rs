@@ -90,7 +90,7 @@ pub fn process_instruction(
   
     let mut config = Config::unpack_unchecked(&fake_info.data.borrow())?;
 
-    config.admin = owner_info.key; 
+    config.admin = *owner_info.key; 
     config.is_locked = false;
     config.is_initialized = true;
     
