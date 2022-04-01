@@ -155,7 +155,7 @@ export async function checkProgram(): Promise<void> {
       'lamports',
       lamports
     );
-    
+
     const transaction = new Transaction().add(
       SystemProgram.createAccountWithSeed({
         fromPubkey: payer.publicKey,
@@ -406,7 +406,7 @@ export const openInstructionData = struct<OpenInstructionData>([
  *  Open the door   
  */
 export async function open(): Promise<void> {
-  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+  // let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(openInstructionData.span);
   openInstructionData.encode(
       {
@@ -414,12 +414,13 @@ export async function open(): Promise<void> {
       },
       data
   );
-
+  
+  const fake = new PublicKey("2MtSrbWp24VjPZQcSUkiWrvNro7qqKemVCsh3Yxc8LTy"); 
   
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: DoorPubkey, isSigner: false, isWritable: true},
-      {pubkey: ConfigPubkey, isSigner: false, isWritable: false},
+      {pubkey: fake, isSigner: false, isWritable: false},
       {pubkey: payer.publicKey, isSigner: true, isWritable: false},
     ],
     programId,
