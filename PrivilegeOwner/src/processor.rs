@@ -9,6 +9,8 @@ use solana_program::{
     pubkey::{Pubkey,PUBKEY_BYTES},
     program_error::ProgramError,
     program_pack::{IsInitialized, Pack, Sealed},
+    system_instruction,
+    program::invoke_signed,
 };
 use std::convert::TryInto;
 
@@ -119,8 +121,8 @@ pub fn InitializeConfig(
 
 
 pub fn Lock(
+    program_id: &Pubkey,
     accounts: &[AccountInfo],
-    key: Pubkey,
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let config_info = next_account_info(account_info_iter)?;
@@ -149,11 +151,13 @@ pub fn Lock(
     
     Config::pack(config, &mut config_info.data.borrow_mut())?;
 
+    Ok(())
+
 }
 
 pub fn Unlock(
+    program_id: &Pubkey,
     accounts: &[AccountInfo],
-    key: Pubkey,
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let config_info = next_account_info(account_info_iter)?;
@@ -181,6 +185,8 @@ pub fn Unlock(
     config.is_locked = false;
     
     Config::pack(config, &mut config_info.data.borrow_mut())?;
+
+    Ok(())
 
 }
 
@@ -232,7 +238,7 @@ pub fn Close(
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let door_info = next_account_info(account_info_iter)?;
-    let account_info = next_account_info(account_info_iter)?;
+    let config_info = next_account_info(account_info_iter)?;
     let owner_info = next_account_info(account_info_iter)?;
     
     check_account_owner(program_id, door_info)?;
@@ -257,10 +263,6 @@ pub fn Close(
 
     door.is_opened = false;
 
-    Account::pack(
-        account,
-        &mut account_info.data.borrow_mut(),
-    )?;
     Door::pack(
         door,
         &mut door_info.data.borrow_mut()

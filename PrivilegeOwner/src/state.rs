@@ -128,7 +128,7 @@ impl Pack for Config {
             is_initialized,
         } = self;
 
-        door_dst.copy_from_slice(door.as_ref());
+        admin_dst.copy_from_slice(admin.as_ref());
         is_locked_dst[0] = is_locked as u8;
         is_initialized_dst[0] = is_initialized as u8;
     }
