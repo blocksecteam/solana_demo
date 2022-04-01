@@ -149,7 +149,7 @@ export async function checkProgram(): Promise<void> {
     const lamports = await connection.getMinimumBalanceForRentExemption(
       1024,
     );
-
+    
     const transaction = new Transaction().add(
       SystemProgram.createAccountWithSeed({
         fromPubkey: payer.publicKey,
@@ -183,7 +183,10 @@ export async function createConfig(): Promise<void> {
       },
       data
   );
-
+  console.log(
+      'lamports',
+      lamports
+    );
 
   let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
  
