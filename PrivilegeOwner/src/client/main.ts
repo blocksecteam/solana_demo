@@ -28,7 +28,7 @@ async function main() {
   await checkProgram();
   
   // create Account_Account;
-  await createAccount();
+  await createConfig();
   
   // Initialize Door 
   await InitializeDoor();
