@@ -307,7 +307,7 @@ pub fn AllocatePDA(
             ),
         // Order doesn't matter and this slice could include all the accounts and be:
         // `&accounts`
-        &[
+        &[  owner_info.clone(),
             system_program_info.clone(), // program being invoked also needs to be included
             allocated_info.clone(),
         ],

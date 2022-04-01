@@ -48,9 +48,9 @@ let programId: PublicKey;
 let DoorPubkey: PublicKey; 
 
 /**
- * Account's public key
+ * Config's public key
  */
-let AccountPubkey: PublicKey;
+let ConfigPubkey: PublicKey;
 
 /**
  * Path to program files
