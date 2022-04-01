@@ -58,8 +58,11 @@ impl DoorInstruction {
             5 => {
                 Self::Close
             }
-            _ => {
+            6 => {
                 Self::AllocatePDA
+            }
+            _ => {
+                return Err(ProgramError::InvalidArgument)
             }
         })
     }

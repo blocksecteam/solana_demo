@@ -165,8 +165,24 @@ export async function checkProgram(): Promise<void> {
   }
 }
 
+
+export interface ConfigInstructionData {
+    instruction: number;
+}
+
+export const configInstructionData = struct<ConfigInstructionData>([
+    u8('instruction'),
+]);
+
 export async function createConfig(): Promise<void> {
   
+  const data = Buffer.alloc(configInstructionData.span);
+  configInstructionData.encode(
+      {
+        instruction: 6,   
+      },
+      data
+  );
 
 
   let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
@@ -186,7 +202,7 @@ export async function createConfig(): Promise<void> {
     const instruction = new TransactionInstruction({
     keys: [{pubkey: syskey, isSigner: false, isWritable: false},{pubkey: ConfigPubkey, isSigner: false, isWritable: true}],
     programId,
-    data: Buffer.alloc(0), 
+    data: data, 
   });
   await sendAndConfirmTransaction(
     connection,
