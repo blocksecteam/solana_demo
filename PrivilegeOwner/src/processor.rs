@@ -15,7 +15,7 @@ use solana_program::{
 use std::convert::TryInto;
 
 
-
+/// Size of PDA 
 pub const SIZE: usize = 1024;
 
 /// Instruction processor
@@ -119,7 +119,7 @@ pub fn InitializeConfig(
     Ok(())
 }
 
-
+/// Lock the door 
 pub fn Lock(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -155,6 +155,7 @@ pub fn Lock(
 
 }
 
+/// Unlock the door 
 pub fn Unlock(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -272,6 +273,7 @@ pub fn Close(
 } 
 
 
+/// AllocatePDA
 pub fn AllocatePDA(
     program_id: &Pubkey,
     accounts: &[AccountInfo],

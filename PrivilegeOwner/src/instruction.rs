@@ -18,6 +18,7 @@ pub enum DoorInstruction {
     },
     ///
     InitializeConfig {
+       /// pubkey
        key: Pubkey
     },
     /// lock
