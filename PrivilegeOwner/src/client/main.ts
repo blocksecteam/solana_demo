@@ -31,7 +31,7 @@ async function main() {
   await createConfig();
   
   // Initialize Door 
-  await InitializeDoor();
+  //await InitializeDoor();
 
   // Initialize Account 
   await InitializeConfig();
