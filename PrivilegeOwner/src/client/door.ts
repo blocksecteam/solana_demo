@@ -169,7 +169,7 @@ export async function createConfig(): Promise<void> {
   
 
 
-  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+  [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
  
 
   // Check if the Config account has already been created
