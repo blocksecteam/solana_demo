@@ -169,7 +169,7 @@ export async function createConfig(): Promise<void> {
   
 
 
-  [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
  
 
   // Check if the Config account has already been created
@@ -255,7 +255,7 @@ export const initializeConfigInstructionData = struct<InitializeConfigInstructio
  *  InitializeAccount  
  */
 export async function InitializeConfig(): Promise<void> {
-
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(initializeConfigInstructionData.span);
   initializeConfigInstructionData.encode(
       {
@@ -297,7 +297,7 @@ export const lockInstructionData = struct<LockInstructionData>([
  *  Lock the door   
  */
 export async function lock(): Promise<void> {
-
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(lockInstructionData.span);
   lockInstructionData.encode(
       {
@@ -338,7 +338,7 @@ export const unlockInstructionData = struct<UnLockInstructionData>([
  *  unlock the door   
  */
 export async function unlock(): Promise<void> {
-
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(unlockInstructionData.span);
   unlockInstructionData.encode(
       {
@@ -381,7 +381,7 @@ export const openInstructionData = struct<OpenInstructionData>([
  *  Open the door   
  */
 export async function open(): Promise<void> {
-
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(openInstructionData.span);
   openInstructionData.encode(
       {
@@ -422,7 +422,7 @@ export const closeInstructionData = struct<CloseInstructionData>([
  *  close the door   
  */
 export async function close(): Promise<void> {
-
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(closeInstructionData.span);
   closeInstructionData.encode(
       {
