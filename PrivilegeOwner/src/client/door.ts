@@ -165,40 +165,40 @@ export async function checkProgram(): Promise<void> {
   }
 }
 
-export async function createAccount(): Promise<void> {
-  // Derive the address (public key) of a rectangle account from the program so that it's easy to find later.
-  const Account_SEED = 'account';
-  AccountPubkey = await PublicKey.createWithSeed(
-    payer.publicKey,
-    Account_SEED,
-    programId,
-  );
+export async function createConfig(): Promise<void> {
+  
 
-  // Check if the rectangle account has already been created
-  const Account_Account = await connection.getAccountInfo(AccountPubkey);
-  if (Account_Account === null) {
+
+  let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
+ 
+
+  // Check if the Config account has already been created
+  const Config_Account = await connection.getAccountInfo(ConfigPubkey);
+  if (Config_Account === null) {
     console.log(
       'Creating account',
-      AccountPubkey.toBase58(),
+      ConfigPubkey.toBase58(),
       'to store the data',
     );
-    const lamports = await connection.getMinimumBalanceForRentExemption(
-      1024,
-    );
+    
+    let syskey = SystemProgram.programId;
 
-    const transaction = new Transaction().add(
-      SystemProgram.createAccountWithSeed({
-        fromPubkey: payer.publicKey,
-        basePubkey: payer.publicKey,
-        seed: Account_SEED,
-        newAccountPubkey: AccountPubkey,
-        lamports,
-        space: 1024,
-        programId,
-      }),
+    const instruction = new TransactionInstruction({
+    keys: [{pubkey: syskey, isSigner: false, isWritable: false},{pubkey: ConfigPubkey, isSigner: false, isWritable: true}],
+    programId,
+    data: Buffer.alloc(0), 
+  });
+  await sendAndConfirmTransaction(
+    connection,
+    new Transaction().add(instruction),
+    [payer],
     );
-    await sendAndConfirmTransaction(connection, transaction, [payer]);
   }
+  console.log(
+      'Using account',
+      ConfigPubkey.toBase58(),
+      'to store the data',
+    );
 }
 
 
@@ -242,22 +242,25 @@ export async function InitializeDoor(): Promise<void> {
 }
 
 
-export interface InitializeAccountInstructionData {
+export interface InitializeConfigInstructionData {
     instruction: number;
+    key: PublicKey;
 }
 
-export const initializeAccountInstructionData = struct<InitializeAccountInstructionData>([
+export const initializeConfigInstructionData = struct<InitializeConfigInstructionData>([
     u8('instruction'),
+    publicKey('key'),
 ]);
 /**
  *  InitializeAccount  
  */
-export async function InitializeAccount(): Promise<void> {
+export async function InitializeConfig(): Promise<void> {
 
-  const data = Buffer.alloc(initializeAccountInstructionData.span);
-  initializeAccountInstructionData.encode(
+  const data = Buffer.alloc(initializeConfigInstructionData.span);
+  initializeConfigInstructionData.encode(
       {
-        instruction: 1,   
+        instruction: 1,
+        key: payer.publicKey,   
       },
       data
   );
@@ -265,9 +268,7 @@ export async function InitializeAccount(): Promise<void> {
   
   const instruction = new TransactionInstruction({
     keys: [
-      {pubkey: AccountPubkey, isSigner: false, isWritable: true},
-      {pubkey: DoorPubkey, isSigner: false, isWritable: true},
-      {pubkey: payer.publicKey, isSigner: false, isWritable: true},
+      {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
     ],
     programId,
     data: data, 
@@ -279,6 +280,93 @@ export async function InitializeAccount(): Promise<void> {
     [payer],
   );
 }
+
+
+
+
+export interface LockInstructionData {
+    instruction: number;
+}
+
+export const lockInstructionData = struct<LockInstructionData>([
+    u8('instruction'),
+]);
+
+
+/**
+ *  Lock the door   
+ */
+export async function lock(): Promise<void> {
+
+  const data = Buffer.alloc(lockInstructionData.span);
+  lockInstructionData.encode(
+      {
+        instruction: 2,   
+      },
+      data
+  );
+
+  
+  const instruction = new TransactionInstruction({
+    keys: [
+      {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
+    ],
+    programId,
+    data: data, 
+  });
+
+  await sendAndConfirmTransaction(
+    connection,
+    new Transaction().add(instruction),
+    [payer],
+  );
+}
+
+
+
+export interface UnLockInstructionData {
+    instruction: number;
+}
+
+export const unlockInstructionData = struct<UnLockInstructionData>([
+    u8('instruction'),
+]);
+
+
+/**
+ *  Lock the door   
+ */
+export async function lock(): Promise<void> {
+
+  const data = Buffer.alloc(unlockInstructionData.span);
+  unlockInstructionData.encode(
+      {
+        instruction: 3,   
+      },
+      data
+  );
+
+  
+  const instruction = new TransactionInstruction({
+    keys: [
+      {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
+    ],
+    programId,
+    data: data, 
+  });
+
+  await sendAndConfirmTransaction(
+    connection,
+    new Transaction().add(instruction),
+    [payer],
+  );
+}
+
+
+
+
 
 
 
@@ -297,7 +385,7 @@ export async function open(): Promise<void> {
   const data = Buffer.alloc(openInstructionData.span);
   openInstructionData.encode(
       {
-        instruction: 2,   
+        instruction: 4,   
       },
       data
   );
@@ -306,8 +394,8 @@ export async function open(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: DoorPubkey, isSigner: false, isWritable: true},
-      {pubkey: AccountPubkey, isSigner: false, isWritable: true},
-      {pubkey: payer.publicKey, isSigner: true, isWritable: true},
+      {pubkey: ConfigPubkey, isSigner: false, isWritable: false},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
     ],
     programId,
     data: data, 
@@ -338,7 +426,7 @@ export async function close(): Promise<void> {
   const data = Buffer.alloc(closeInstructionData.span);
   closeInstructionData.encode(
       {
-        instruction: 3,   
+        instruction: 5,   
       },
       data
   );
@@ -347,8 +435,8 @@ export async function close(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: DoorPubkey, isSigner: false, isWritable: true},
-      {pubkey: AccountPubkey, isSigner: false, isWritable: true},
-      {pubkey: payer.publicKey, isSigner: true, isWritable: true},
+      {pubkey: ConfigPubkey, isSigner: false, isWritable: false},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
     ],
     programId,
     data: data, 

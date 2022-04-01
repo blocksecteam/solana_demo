@@ -73,57 +73,63 @@ impl Pack for Door {
 
 /// Account
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
-pub struct Account {
-    /// The door associated with this account
-    pub door: Pubkey,
+pub struct Config {
+    /// The admin of the config
+    pub admin: Pubkey,
 
-    /// The owner of the account 
-    pub owner: Pubkey,
+    /// locked or not  
+    pub is_locked: bool,
 
     /// Default to false  
     pub is_initialized: bool
 }
 
 
-impl Sealed for Account {}
-impl IsInitialized for Account {
+impl Sealed for Config {}
+impl IsInitialized for Config {
     fn is_initialized(&self) -> bool {
         self.is_initialized
     }
 }
 
-impl Pack for Account {
+impl Pack for Config {
     const LEN: usize = 1024;
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
-        let src = array_ref![src, 0, 65];
-        let (door, owner, is_initialized) =
-            array_refs![src, 32, 32, 1];
+        let src = array_ref![src, 0, 34];
+        let (admin, is_locked, is_initialized) =
+            array_refs![src, 32, 1, 1];
         
+        let is_locked = match is_locked {
+            [0] => false,
+            [1] => true,
+            _ => return Err(ProgramError::InvalidAccountData),
+        };
+       
         let is_initialized = match is_initialized {
             [0] => false,
             [1] => true,
             _ => return Err(ProgramError::InvalidAccountData),
         };
 
-        Ok(Account {
-            door: Pubkey::new_from_array(*door),
-            owner: Pubkey::new_from_array(*owner),
+        Ok(Config {
+            admin: Pubkey::new_from_array(*admin),
+            is_locked: is_locked,
             is_initialized: is_initialized,
         })
     }
     fn pack_into_slice(&self, dst: &mut [u8]) {
-        let dst = array_mut_ref![dst, 0, 65];
-        let (door_dst, owner_dst, is_initialized_dst) = 
-             mut_array_refs![dst, 32, 32, 1];
+        let dst = array_mut_ref![dst, 0, 34];
+        let (admin_dst, is_locked_dst, is_initialized_dst) = 
+             mut_array_refs![dst, 32, 1, 1];
 
-        let &Account {
-            ref door,
-            ref owner,
+        let &Config {
+            ref admin,
+            is_locked,
             is_initialized,
         } = self;
 
         door_dst.copy_from_slice(door.as_ref());
-        owner_dst.copy_from_slice(owner.as_ref());
+        is_locked_dst[0] = is_locked as u8;
         is_initialized_dst[0] = is_initialized as u8;
     }
 }

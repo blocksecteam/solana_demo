@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Door, Account}, instruction::DoorInstruction};
+use crate::{state::{Door, Config}, instruction::DoorInstruction};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
@@ -13,6 +13,8 @@ use solana_program::{
 use std::convert::TryInto;
 
 
+
+pub const SIZE: usize = 1024;
 
 /// Instruction processor
 pub fn process_instruction(
@@ -29,9 +31,19 @@ pub fn process_instruction(
             msg!("Instruction: InitializeDoor");
             InitializeDoor(accounts, key)
         }
-        DoorInstruction::InitializeAccount => {
-            msg!("Instruction: InitializeAccount");
-            InitializeAccount(program_id, accounts)
+        DoorInstruction::InitializeConfig {
+             key
+        } => {
+            msg!("Instruction: InitializeConfig");
+            InitializeConfig(program_id, accounts, key)
+        }
+        DoorInstruction::Lock => {
+            msg!("Instruction: Lock");
+            Lock(program_id, accounts)
+        }
+        DoorInstruction::Unlock => {
+            msg!("Instruction: Unlock");
+            Unlock(program_id, accounts)
         }
         DoorInstruction::Open => {
             msg!("Instruction: Open");
@@ -40,6 +52,10 @@ pub fn process_instruction(
         DoorInstruction::Close => {
             msg!("Instruction: Close");
             Close(program_id, accounts)
+        }
+        DoorInstruction::AllocatePDA => {
+            msg!("Instruction: Allocate");
+            AllocatePDA(program_id, accounts)
         }
      }
 }
@@ -69,30 +85,103 @@ pub fn InitializeDoor(
      Ok(())
 }
 
-/// Initialize Account
-pub fn InitializeAccount(
+/// Initialize Config
+pub fn InitializeConfig(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
+    key: Pubkey,
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
-    let new_account_info = next_account_info(account_info_iter)?;
-    let door_info = next_account_info(account_info_iter)?;
-    let owner = next_account_info(account_info_iter)?;
+    let config_info = next_account_info(account_info_iter)?;
+     
+    let (expected_allocated_key, bump) =
+        Pubkey::find_program_address(&[b"You pass butter"], program_id);
     
-    check_account_owner(program_id, door_info)?;
-    /// deserializing
-    let mut account = Account::unpack_unchecked(&new_account_info.data.borrow())?;
-    if account.is_initialized() {
+    if *config_info.key != expected_allocated_key {
         return Err(ProgramError::InvalidArgument);
     }
-
-    account.door = *door_info.key;
-    account.owner = *owner.key; 
-    account.is_initialized = true;
-
-    Account::pack(account, &mut new_account_info.data.borrow_mut())?;
+         
+    /// deserializing 
+    let mut config = Config::unpack_unchecked(&config_info.data.borrow())?;
+    if config.is_initialized {
+       return Err(ProgramError::InvalidArgument);
+    }
+     
+    config.admin = key;
+    config.is_locked = true;
+    config.is_initialized = true;
+     
+    /// serializing
+    Config::pack(config, &mut config_info.data.borrow_mut())?;
 
     Ok(())
+}
+
+
+pub fn Lock(
+    accounts: &[AccountInfo],
+    key: Pubkey,
+) -> ProgramResult {
+    let account_info_iter = &mut accounts.iter();
+    let config_info = next_account_info(account_info_iter)?;
+    let admin_info = next_account_info(account_info_iter)?;
+     
+    check_account_owner(program_id, config_info)?;
+    /// deserializing
+    let mut config = Config::unpack(&config_info.data.borrow())?;
+    if !cmp_pubkeys(admin_info.key, &config.admin) {
+        return Err(ProgramError::InvalidArgument);
+    }
+     
+    if !admin_info.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+    
+    if !config.is_initialized {
+        return Err(ProgramError::InvalidArgument);
+    } 
+    
+    if  config.is_locked {
+        return Err(ProgramError::InvalidArgument);
+    } 
+
+    config.is_locked = true;
+    
+    Config::pack(config, &mut config_info.data.borrow_mut())?;
+
+}
+
+pub fn Unlock(
+    accounts: &[AccountInfo],
+    key: Pubkey,
+) -> ProgramResult {
+    let account_info_iter = &mut accounts.iter();
+    let config_info = next_account_info(account_info_iter)?;
+    let admin_info = next_account_info(account_info_iter)?;
+     
+    check_account_owner(program_id, config_info)?;
+    /// deserializing
+    let mut config = Config::unpack(&config_info.data.borrow())?;
+    if !cmp_pubkeys(admin_info.key, &config.admin) {
+        return Err(ProgramError::InvalidArgument);
+    }
+     
+    if !admin_info.is_signer {
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+    
+    if !config.is_initialized {
+        return Err(ProgramError::InvalidArgument);
+    } 
+    
+    if  !config.is_locked {
+        return Err(ProgramError::InvalidArgument);
+    } 
+
+    config.is_locked = false;
+    
+    Config::pack(config, &mut config_info.data.borrow_mut())?;
+
 }
 
 /// Open
@@ -102,18 +191,19 @@ pub fn Open(
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let door_info = next_account_info(account_info_iter)?;
-    let account_info = next_account_info(account_info_iter)?;
+    let config_info = next_account_info(account_info_iter)?;
     let owner_info = next_account_info(account_info_iter)?;
     
     check_account_owner(program_id, door_info)?;
+    check_account_owner(program_id, config_info)?;
+
     /// deserializing
-    let mut account = Account::unpack(&account_info.data.borrow())?;
-    if !cmp_pubkeys(door_info.key, &account.door) {
-            return Err(ProgramError::InvalidArgument);
-    }
-    if !cmp_pubkeys(owner_info.key, &account.owner) {
+    let mut config = Config::unpack(&config_info.data.borrow())?;
+
+    if config.is_locked {
         return Err(ProgramError::InvalidArgument);
-    }
+    } 
+    
 
     let mut door = Door::unpack(&door_info.data.borrow())?;
 
@@ -127,10 +217,6 @@ pub fn Open(
 
     door.is_opened = true;
 
-    Account::pack(
-        account,
-        &mut account_info.data.borrow_mut(),
-    )?;
     Door::pack(
         door,
         &mut door_info.data.borrow_mut()
@@ -150,15 +236,15 @@ pub fn Close(
     let owner_info = next_account_info(account_info_iter)?;
     
     check_account_owner(program_id, door_info)?;
-    /// deserializing
-    let mut account = Account::unpack(&account_info.data.borrow())?;
-    if !cmp_pubkeys(door_info.key, &account.door) {
-        return Err(ProgramError::InvalidArgument);
-    }
-    if !cmp_pubkeys(owner_info.key, &account.owner) {
-        return Err(ProgramError::InvalidArgument);
-    }
+    check_account_owner(program_id, config_info)?;
     
+    /// deserializing
+    let mut config = Config::unpack(&config_info.data.borrow())?;
+    
+    if config.is_locked {
+        return Err(ProgramError::InvalidArgument);
+    } 
+
     let mut door = Door::unpack(&door_info.data.borrow())?;
 
     let expected_owner = door.key;
@@ -182,6 +268,43 @@ pub fn Close(
     
     Ok(())
 } 
+
+
+pub fn AllocatePDA(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+) -> ProgramResult {
+    // Create in iterator to safety reference accounts in the slice
+    let account_info_iter = &mut accounts.iter();
+
+    // Account info for the program being invoked
+    let system_program_info = next_account_info(account_info_iter)?;
+    // Account info to allocate
+    let allocated_info = next_account_info(account_info_iter)?;
+
+    let (expected_allocated_key, bump) =
+        Pubkey::find_program_address(&[b"You pass butter"], program_id);
+    
+    if *allocated_info.key != expected_allocated_key {
+        // allocated key does not match the derived address
+        return Err(ProgramError::InvalidArgument);
+    }
+
+    // Invoke the system program to allocate account data
+    invoke_signed(
+        &system_instruction::allocate(allocated_info.key, SIZE as u64),
+        // Order doesn't matter and this slice could include all the accounts and be:
+        // `&accounts`
+        &[
+            system_program_info.clone(), // program being invoked also needs to be included
+            allocated_info.clone(),
+        ],
+
+        &[&[b"You pass butter", &[bump]]],
+    )?;
+
+    Ok(())
+}
 
 /// Validate Owner 
 

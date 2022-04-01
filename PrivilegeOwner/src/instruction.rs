@@ -8,7 +8,7 @@ use solana_program::{
 };
 use std::mem::size_of;
 
-/// Instructions supported by the lending program.
+/// Instructions.
 // #[derive(Clone, Debug, PartialEq)]
 pub enum DoorInstruction {
     /// InitializeDoor
@@ -16,12 +16,20 @@ pub enum DoorInstruction {
        /// pubkey
        key: Pubkey
     },
-    /// InitializeAccount
-    InitializeAccount,
+    ///
+    InitializeConfig {
+       key: Pubkey
+    },
+    /// lock
+    Lock,
+    /// unlock
+    Unlock,
     /// Open
     Open,
     /// Close
     Close,
+    /// AllocatePDA
+    AllocatePDA
 }
 
 impl DoorInstruction {
@@ -34,17 +42,23 @@ impl DoorInstruction {
                 Self::InitializeDoor { key }
             }
             1 => {
-                Self::InitializeAccount
+                let (key, _rest) = Self::unpack_pubkey(rest)?;
+                Self::InitializeConfig { key }
             }
             2 => {
-                Self::Open
+                Self::Lock
             }
             3 => {
+                Self::Unlock
+            }
+            4 => {
+                Self::Open
+            }
+            5 => {
                 Self::Close
             }
             _ => {
-                msg!("Instruction cannot be unpacked");
-                return Err(ProgramError::InvalidArgument);
+                Self::AllocatePDA
             }
         })
     }
