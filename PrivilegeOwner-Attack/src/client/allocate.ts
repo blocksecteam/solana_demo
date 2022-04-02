@@ -179,7 +179,7 @@ export async function allocate(): Promise<void> {
   
   
   const instruction = new TransactionInstruction({
-    keys: [{pubkey: ConfigPubkey, isSigner: false, isWritable: false},{pubkey: payer.publicKey, isSigner: true, isWritable: false}],
+    keys: [{pubkey: ConfigPubkey, isSigner: false, isWritable: true},{pubkey: payer.publicKey, isSigner: true, isWritable: false}],
     programId,
     data: Buffer.alloc(0), // All instructions are hellos  
   });
