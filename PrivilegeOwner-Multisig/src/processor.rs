@@ -141,8 +141,8 @@ pub fn Lock(
         return Err(ProgramError::InvalidArgument);
     }
     
-    if Self::cmp_pubkeys(program_id, admin_info.owner)
-            && admin_info.data_len() == Multisig::get_packed_len()
+    if cmp_pubkeys(program_id, admin_info.owner)
+        && admin_info.data_len() == Multisig::get_packed_len()
     {   
         let signers = account_info_iter.as_slice();
         let multisig = Multisig::unpack(&admin_info.data.borrow())?;
@@ -150,7 +150,7 @@ pub fn Lock(
         let mut matched = [false; MAX_SIGNERS];
         for signer in signers.iter() {
             for (position, key) in multisig.signers[0..multisig.n as usize].iter().enumerate() {
-                if Self::cmp_pubkeys(key, signer.key) && !matched[position] {
+                if  cmp_pubkeys(key, signer.key) && !matched[position] {
                     if !signer.is_signer {
                         return Err(ProgramError::MissingRequiredSignature);
                     }
@@ -201,8 +201,8 @@ pub fn Unlock(
         return Err(ProgramError::InvalidArgument);
     }
      
-    if Self::cmp_pubkeys(program_id, admin_info.owner)
-            && admin_info.data_len() == Multisig::get_packed_len()
+    if cmp_pubkeys(program_id, admin_info.owner)
+        && admin_info.data_len() == Multisig::get_packed_len()
     {   
         let signers = account_info_iter.as_slice();
         let multisig = Multisig::unpack(&admin_info.data.borrow())?;
@@ -210,7 +210,7 @@ pub fn Unlock(
         let mut matched = [false; MAX_SIGNERS];
         for signer in signers.iter() {
             for (position, key) in multisig.signers[0..multisig.n as usize].iter().enumerate() {
-                if Self::cmp_pubkeys(key, signer.key) && !matched[position] {
+                if cmp_pubkeys(key, signer.key) && !matched[position] {
                     if !signer.is_signer {
                         return Err(ProgramError::MissingRequiredSignature);
                     }
@@ -381,7 +381,8 @@ pub fn InitializeMultisig(
     let account_info_iter = &mut accounts.iter();
     let multisig_info = next_account_info(account_info_iter)?;
     let multisig_info_data_len = multisig_info.data_len();
-
+    
+    let mut multisig = Multisig::unpack_unchecked(&multisig_info.data.borrow())?;
     if multisig.is_initialized {
         return Err(ProgramError::InvalidArgument);
     }
