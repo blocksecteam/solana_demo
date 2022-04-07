@@ -107,8 +107,14 @@ export async function establishPayer(): Promise<void> {
   payer = Keypair.generate();
   
   let lamports = await connection.getBalance(payer.publicKey);
- 
-
+  
+  let airdropSignature = await connection.requestAirdrop(
+  payer.publicKey,
+  LAMPORTS_PER_SOL,
+  );
+  
+  await connection.confirmTransaction(airdropSignature);
+  
   console.log(
     'Using account',
     payer.publicKey.toBase58(),
