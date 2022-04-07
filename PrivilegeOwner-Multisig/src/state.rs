@@ -133,7 +133,7 @@ impl Pack for Config {
     }
 }
 
-
+/// Multisig account 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct Multisig {
     /// Number of signers required
