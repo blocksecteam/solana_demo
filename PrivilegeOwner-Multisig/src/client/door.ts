@@ -571,8 +571,8 @@ export async function InitializeMultisig(): Promise<void> {
     keys: [
       {pubkey: MultisigPubkey, isSigner: false, isWritable: true},
       {pubkey: payer.publicKey, isSigner: true, isWritable: false},
-      {pubkey: signer2.publicKey, isSigner: true, isWritable: false},
-      {pubkey: signer3.publicKey, isSigner: true, isWritable: false},
+      {pubkey: signer2.publicKey, isSigner: false, isWritable: false},
+      {pubkey: signer3.publicKey, isSigner: false, isWritable: false},
     ],
     programId,
     data: data, 
