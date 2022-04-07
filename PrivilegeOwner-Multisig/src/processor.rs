@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Door, Config, Multisig}, instruction::{DoorInstruction, is_valid_signer_index, MAX_SIGNERS};
+use crate::{state::{Door, Config, Multisig}, instruction::{DoorInstruction, is_valid_signer_index, MAX_SIGNERS}};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,

@@ -36,7 +36,7 @@ pub enum DoorInstruction {
     /// Close
     Close,
     /// AllocatePDA
-    AllocatePDA
+    AllocatePDA,
     /// InitializeMultisig
     InitializeMultisig {
         /// The number of signers (M) required to validate this multisignature
