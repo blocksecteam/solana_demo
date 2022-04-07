@@ -6,7 +6,7 @@ import os from 'os';
 import fs from 'mz/fs';
 import path from 'path';
 import yaml from 'yaml';
-import {Keypair} from '@solana/web3.js';
+import Keypair from '@solana/web3.js';
 
 /**
  * @private
@@ -66,3 +66,5 @@ export async function createKeypairFromFile(
   const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
   return Keypair.fromSecretKey(secretKey);
 }
+
+

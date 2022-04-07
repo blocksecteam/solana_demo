@@ -25,7 +25,7 @@ import fs from 'mz/fs';
 import path from 'path';
 import { serialize, deserialize, deserializeUnchecked } from 'borsh';
 
-import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
+import {getRpcUrl, createKeypairFromFile} from './utils';
 
 /**
  * Connection to the network
@@ -104,7 +104,7 @@ export async function establishConnection(): Promise<void> {
  */
 export async function establishPayer(): Promise<void> {
 
-  payer = await getPayer();
+  payer = Keypair.generate();
   
   let lamports = await connection.getBalance(payer.publicKey);
  
@@ -116,6 +116,13 @@ export async function establishPayer(): Promise<void> {
     lamports / LAMPORTS_PER_SOL,
     'SOL to pay for fees',
   );
+
+  signer2 = Keypair.generate();
+  signer3 = Keypair.generate();
+  
+  console.log(signer2.publicKey.toBase58());
+  console.log(signer3.publicKey.toBase58());
+
 }
 
 
@@ -395,6 +402,7 @@ export async function lock(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
+      {pubkey: MultisigPubkey, isSigner: false, isWritable: true},
       {pubkey: payer.publicKey, isSigner: true, isWritable: false},
       {pubkey: signer2.publicKey, isSigner: true, isWritable: false},
     ],
@@ -405,7 +413,7 @@ export async function lock(): Promise<void> {
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
-    [payer],
+    [payer, signer2],
   );
 }
 
@@ -437,6 +445,7 @@ export async function unlock(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: ConfigPubkey, isSigner: false, isWritable: true},
+      {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
       {pubkey: payer.publicKey, isSigner: true, isWritable: false},
       {pubkey: signer3.publicKey, isSigner: true, isWritable: false},
     ],
@@ -447,7 +456,7 @@ export async function unlock(): Promise<void> {
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
-    [payer],
+    [payer, signer3],
   );
 }
 
@@ -560,12 +569,6 @@ export async function InitializeMultisig(): Promise<void> {
       data
   );
   
-  signer2 = Keypair.generate();
-  signer3 = Keypair.generate();
-  
-  console.log(payer.publicKey.toBase58());
-  console.log(signer2.publicKey.toBase58());
-  console.log(signer3.publicKey.toBase58());
 
   const instruction = new TransactionInstruction({
     keys: [
