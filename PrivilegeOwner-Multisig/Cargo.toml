@@ -1,7 +1,7 @@
 [package]
-name = "PrivilegeOwner"
+name = "PrivilegeOwner-Multisig"
 version = "1.0.0"
-description = "PrivilegeOwner"
+description = "PrivilegeOwner-Multisig"
 authors = ["BlockSec Team"]
 repository = "https://github.com/blocksecteam/solana_demo"
 license = "Apache-2.0"
