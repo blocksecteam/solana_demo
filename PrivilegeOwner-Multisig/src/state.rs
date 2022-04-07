@@ -153,7 +153,7 @@ impl IsInitialized for Multisig {
 }
 
 impl Pack for Multisig {
-    const LEN: usize = 355;
+    const LEN: usize = 1024;
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
         let src = array_ref![src, 0, 355];
         #[allow(clippy::ptr_offset_with_cast)]
