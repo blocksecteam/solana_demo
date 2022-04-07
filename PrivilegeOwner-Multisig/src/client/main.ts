@@ -44,18 +44,19 @@ async function main() {
   // Initialize Account 
   await InitializeConfig();
 
-
   // Unlock the door
   await unlock();
-  
-  // Lock the door 
-  await lock();
 
   // open 
   await open();
 
   // close 
   await close();
+
+  // Lock the door 
+  await lock();
+
+
   
   
   console.log('Success');
