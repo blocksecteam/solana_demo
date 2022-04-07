@@ -54,6 +54,16 @@ let DoorPubkey: PublicKey;
 let ConfigPubkey: PublicKey;
 
 /**
+ * signer2's Keypair
+ */
+let signer2: Keypair;
+
+/**
+ * signer3's Keypair
+ */
+let signer3: Keypair;
+
+/**
  * Multisig's public key
  */
 let MultisigPubkey: PublicKey;
@@ -550,8 +560,8 @@ export async function InitializeMultisig(): Promise<void> {
       data
   );
   
-  const signer2 = Keypair.generate();
-  const signer3 = Keypair.generate();
+  signer2 = Keypair.generate();
+  signer3 = Keypair.generate();
   
   console.log(payer.publicKey.toBase58());
   console.log(signer2.publicKey.toBase58());
