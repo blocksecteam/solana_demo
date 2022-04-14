@@ -1,6 +1,5 @@
 
 use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
-use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     program_error::ProgramError,
     program_pack::{IsInitialized, Pack, Sealed},
@@ -13,7 +12,6 @@ use crate::instruction::MAX_SIGNERS;
 
 
 /// Multisig account 
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct Multisig {
     /// Number of signers required
     pub m: u8,
@@ -76,7 +74,6 @@ pub struct TransactionAccount {
 
 
 /// Multisig account 
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct Transaction {
     /// The multisig account this transaction belongs to.
     pub multisig: Pubkey,
