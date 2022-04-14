@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Multisig, Transaction}, instruction::MultisigInstruction};
+use crate::{state::{Multisig, Transaction}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
@@ -11,9 +11,10 @@ use solana_program::{
     program_pack::{IsInitialized, Pack, Sealed},
     instruction::Instruction,
     program::invoke_signed,
+    system_instruction
 };
 use std::convert::TryInto;
-use crate::instruction::MAX_SIGNERS;
+
 
 /// Size of PDA 
 pub const SIZE: usize = 1024;
@@ -46,11 +47,11 @@ pub fn process_instruction(
         }
         MultisigInstruction::Approve => {
             msg!("Instruction: Approve");
-            Approve(program_id, accounts, transaction_key)
+            Approve(program_id, accounts)
         }
         MultisigInstruction::ExecuteTransaction => {
             msg!("Instruction: ExecuteTransaction");
-            ExecuteTransaction(program_id, accounts, transaction_key)
+            ExecuteTransaction(program_id, accounts)
         }        
     }
 }
@@ -243,8 +244,11 @@ pub fn ExecuteTransaction(
         program_id: transaction.program_id, 
         accounts: transaction.accounts,
         data: transaction.data,
-    }
+    };
     
+    let (expected_allocated_key, bump) =
+        Pubkey::find_program_address(&[b"You pass butter"], program_id);
+        
     invoke_signed(
         &ix,
         // Order doesn't matter and this slice could include all the accounts and be:

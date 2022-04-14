@@ -8,7 +8,6 @@ use solana_program::{
     msg,
 };
 use crate::instruction::MAX_SIGNERS;
-use std::{io::BufWriter, mem};
 
 
 
@@ -69,7 +68,6 @@ impl Pack for Multisig {
 }
 
 /// Transaction Account 
-#[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct TransactionAccount {
     pub pubkey: Pubkey,
     pub is_signer: bool,
@@ -147,7 +145,7 @@ impl Pack for Transaction {
                 [1] => true,
                 _ => return Err(ProgramError::InvalidAccountData),
             },
-        }
+        };
         let mut t2 = TransactionAccount {
             pubkey: Pubkey::new_from_array(*pubkey2),
             is_signer: match is_signer2 {
@@ -160,7 +158,7 @@ impl Pack for Transaction {
                 [1] => true,
                 _ => return Err(ProgramError::InvalidAccountData),
             },
-        }
+        };
         let mut result = Transaction {
             multisig: Pubkey::new_from_array(*multisig),
             program_id: Pubkey::new_from_array(*program_id),
@@ -177,7 +175,7 @@ impl Pack for Transaction {
                 [1] => true,
                 _ => return Err(ProgramError::InvalidAccountData),
             },
-        }
+        };
         for (src, dst) in signers_flat.chunks(1).zip(result.signers.iter_mut()) {
             if src = [0] {
                *dst = true; 
@@ -216,7 +214,7 @@ impl Pack for Transaction {
             1, 
             MAX_SIGNERS, 
             1, 
-            1,
+            1
         ];
         multisig.copy_from_slice(self.multisig.as_ref());
         program_id.copy_from_slice(self.program_id.as_ref());
@@ -230,8 +228,8 @@ impl Pack for Transaction {
         for i in 0..MAX_SIGNERS {
             signers_flat[i] = self.signers[i] as u8;
         }
-        *did_execute_dst = [self.did_execute as u8];
-        *is_initialized_dst = [self.is_initialized as u8];
+        *did_execute = [self.did_execute as u8];
+        *is_initialized = [self.is_initialized as u8];
     }
 }
 
