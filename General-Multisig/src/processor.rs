@@ -212,7 +212,6 @@ pub fn Approve(
     Transaction::pack(transaction, &mut transaction_info.data.borrow_mut())?;
 
     Ok(())
-
 }
 
 /// Execute Transaction
