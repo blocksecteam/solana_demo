@@ -307,7 +307,7 @@ export const createTransactionInstructionData = struct<CreateTransactionInstruct
  *  CreateTransaction  
  */
 export async function CreateTransaction(): Promise<void> {
-  
+  let [MultisigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const target = new PublicKey("81948aBFBB5965oTTCpZU8Zxi4dhUjC7sHQx4qr6aqx7");
   const config = new PublicKey("uxWt8FdYSjxGZdXwBvWJ5794kjkcZq3o76vDrPXprnX");
 
