@@ -246,12 +246,9 @@ pub fn ExecuteTransaction(
     }
     
     let mut vec1 = Vec::new(); 
-    let mut meta1 = AccountMeta::new()；
-    meta1.pubkey = transaction.accounts[0].pubkey;
-    meta1.is_signer = transaction.accounts[0].is_signer;
-    let mut meta2 = AccountMeta::new_credit_only();
-    meta2.pubkey = transaction.accounts[1].pubkey;
-    meta2.is_signer = transaction.accounts[1].is_signer;
+    let mut meta1 = AccountMeta::new(transaction.accounts[0].pubkey, transaction.accounts[0].is_signer)；
+    let mut meta2 = AccountMeta::new_credit_only(transaction.accounts[1].pubkey, transaction.accounts[1].is_signer);
+    
     vec1.push(meta1);
     vec1.push(meta2);
     let mut vec2 = Vec::new();
