@@ -282,10 +282,11 @@ export const initializeConfigInstructionData = struct<InitializeConfigInstructio
 export async function InitializeConfig(): Promise<void> {
   let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(initializeConfigInstructionData.span);
+  const multisig = new PublicKey("49kLjdtpxCVGTcdRiDZjrmBZedbZcCHPpEvyexv2YKV4");
   initializeConfigInstructionData.encode(
       {
         instruction: 1,
-        key: payer.publicKey,   
+        key: multisig,   
       },
       data
   );
@@ -416,12 +417,12 @@ export async function open(): Promise<void> {
   );
   
   //const fake = new PublicKey("2MtSrbWp24VjPZQcSUkiWrvNro7qqKemVCsh3Yxc8LTy"); 
-  const real_owner = new PublicKey("CYqqzCxm8duWq2MeHCSJE4FDbuwiAksbq666VuCX1aGi");
+  //const real_owner = new PublicKey("CYqqzCxm8duWq2MeHCSJE4FDbuwiAksbq666VuCX1aGi");
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: DoorPubkey, isSigner: false, isWritable: true},
       {pubkey: ConfigPubkey, isSigner: false, isWritable: false},
-      {pubkey: real_owner, isSigner: true, isWritable: false},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
     ],
     programId,
     data: data, 

@@ -28,13 +28,13 @@ async function main() {
   await checkProgram();
   
   // create Config_Account;
-  //await createConfig();
+  await createConfig();
   
   // Initialize Door 
   //await InitializeDoor();
 
   // Initialize Account 
-  //await InitializeConfig();
+  await InitializeConfig();
 
 
   // Unlock the door
@@ -44,7 +44,7 @@ async function main() {
   //await lock();
 
   // open 
-  await open();
+  //await open();
 
   // close 
   //await close();
