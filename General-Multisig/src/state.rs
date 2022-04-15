@@ -176,6 +176,7 @@ impl Pack for Transaction {
         };
         for i in 0..MAX_SIGNERS {
           if signers_flat[i] == 1 {
+            msg!{"work"}
             result.signers[i] = true;
           }
         };
@@ -222,7 +223,7 @@ impl Pack for Transaction {
         *is_writable2 = [self.accounts[1].is_writable as u8];
         *data = [self.data as u8];
         for i in 0..MAX_SIGNERS {
-            signers_flat[i] = self.signers[i] as u8;
+            *signers_flat[i] = self.signers[i] as u8;
         }
         *did_execute = [self.did_execute as u8];
         *is_initialized = [self.is_initialized as u8];
