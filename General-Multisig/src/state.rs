@@ -224,7 +224,7 @@ impl Pack for Transaction {
         *data = [self.data as u8];
         for (i, src) in self.signers.iter().enumerate() {
             let dst_array = array_mut_ref![signers_flat, i, 1];
-            dst_array.copy_from_slice(src.as_ref());
+            dst_array.copy_from_slice(src as u8);
         }
         *did_execute = [self.did_execute as u8];
         *is_initialized = [self.is_initialized as u8];
