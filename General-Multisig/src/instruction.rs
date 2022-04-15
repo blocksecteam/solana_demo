@@ -17,7 +17,7 @@ pub const MAX_SIGNERS: usize = 11;
 /// Instructions.
 // #[derive(Clone, Debug, PartialEq)]
 pub enum MultisigInstruction {
-    // Allocate PDA 
+    /// Allocate PDA 
     AllocatePDA,
     /// Initialize Multisig
     InitializeMultisig {
@@ -25,7 +25,7 @@ pub enum MultisigInstruction {
         /// account.
         m: u8,
     },
-    // Create Transaction
+    /// Create Transaction
     CreateTransaction{
         /// the target program id to call
         target_program_id: Pubkey,
