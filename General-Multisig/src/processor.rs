@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Multisig, Transaction}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
+use crate::{state::{Multisig, Transaction, AccountMeta}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
@@ -163,8 +163,8 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
-     let mut account1 = TransactionAccount::try_from_slice_unchecked(&account1_info.data.borrow())?;
-     let mut account2 = TransactionAccount::try_from_slice_unchecked(&account2_info.data.borrow())?;
+     let mut account1 = AccountMeta::try_from_slice_unchecked(&account1_info.data.borrow())?;
+     let mut account2 = AccountMeta::try_from_slice_unchecked(&account2_info.data.borrow())?;
 
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
