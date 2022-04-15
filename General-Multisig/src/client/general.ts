@@ -276,9 +276,9 @@ export async function InitializeMultisig(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: MultisigPubkey, isSigner: false, isWritable: true},
-      {pubkey: payer.publicKey, isSigner: true, isWritable: false}
-      {pubkey: signer2.publicKey, isSigner: false, isWritable: false}
-      {pubkey: signer3.publicKey, isSigner: false, isWritable: false}
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
+      {pubkey: signer2.publicKey, isSigner: false, isWritable: false},
+      {pubkey: signer3.publicKey, isSigner: false, isWritable: false},
     ],
     programId,
     data: data, 
@@ -432,6 +432,7 @@ export const executeTransactionInstructionData = struct<ExecuteTransactionInstru
 export async function ExecuteTransaction(): Promise<void> {
   let [MultisigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   
+  const config = new PublicKey("//TO DO");
   const data = Buffer.alloc(executeTransactionInstructionData.span);
   executeTransactionInstructionData.encode(
       {
