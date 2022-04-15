@@ -222,8 +222,9 @@ impl Pack for Transaction {
         *is_signer2 = [self.accounts[1].is_signer as u8];
         *is_writable2 = [self.accounts[1].is_writable as u8];
         *data = [self.data as u8];
-        for i in 0..MAX_SIGNERS {
-            *signers_flat[i] = self.signers[i] as u8;
+        for (i, src) in self.signers.iter().enumerate() {
+            let dst_array = array_mut_ref![signers_flat, i, 1];
+            dst_array.copy_from_slice(src.as_ref());
         }
         *did_execute = [self.did_execute as u8];
         *is_initialized = [self.is_initialized as u8];
