@@ -1,4 +1,4 @@
-
+use borsh::{BorshDeserialize, BorshSerialize};
 use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
 use solana_program::{
     program_error::ProgramError,
@@ -65,7 +65,8 @@ impl Pack for Multisig {
     }
 }
 
-/// Transaction Account 
+/// Transaction Account
+#[derive(BorshSerialize, BorshDeserialize, Debug)] 
 pub struct TransactionAccount {
     pub pubkey: Pubkey,
     pub is_signer: bool,
@@ -173,13 +174,11 @@ impl Pack for Transaction {
                 _ => return Err(ProgramError::InvalidAccountData),
             },
         };
-        for (src, dst) in signers_flat.chunks(1).zip(result.signers.iter_mut()) {
-            if src = [0] {
-               *dst = true; 
-            } else {
-               *dst = false; 
-            }
-        }
+        for i in 0..MAX_SIGNERS {
+          if signers_flat[i] == 1 {
+            result.signers[i] = true;
+          }
+        };
         Ok(result)
     }
     fn pack_into_slice(&self, dst: &mut [u8]) {
@@ -215,12 +214,12 @@ impl Pack for Transaction {
         ];
         multisig.copy_from_slice(self.multisig.as_ref());
         program_id.copy_from_slice(self.program_id.as_ref());
-        pubkey1.copy_from_slice(self.pubkey1.as_ref());
-        *is_signer1 = [self.is_signer1 as u8];
-        *is_writable1 = [self.is_writable1 as u8];
-        pubkey2.copy_from_slice(self.pubkey2.as_ref());
-        *is_signer2 = [self.is_signer2 as u8];
-        *is_writable2 = [self.is_writable2 as u8];
+        pubkey1.copy_from_slice(self.accounts[0].pubkey.as_ref());
+        *is_signer1 = [self.accounts[0].is_signer as u8];
+        *is_writable1 = [self.accounts[0].is_writable as u8];
+        pubkey2.copy_from_slice(self.accounts[1].pubkey.as_ref());
+        *is_signer2 = [self.accounts[1].is_signer as u8];
+        *is_writable2 = [self.accounts[1].is_writable as u8];
         *data = [self.data as u8];
         for i in 0..MAX_SIGNERS {
             signers_flat[i] = self.signers[i] as u8;

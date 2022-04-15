@@ -13,7 +13,7 @@ use solana_program::{
     program::invoke_signed,
     system_instruction
 };
-use std::convert::TryInto;
+use std::{convert::TryInto, vec::Vec};
 
 
 /// Size of PDA 
@@ -149,7 +149,7 @@ pub fn InitializeMultisig(
 pub fn CreateTransaction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
-    target_program_id: &Pubkey,
+    target_program_id: Pubkey,
     data: u8,
 ) -> ProgramResult {
      let account_info_iter = &mut accounts.iter();
@@ -163,12 +163,15 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
+     let mut account1 = TransactionAccount::try_from_slice_unchecked(&account1_info.data.borrow())?;
+     let mut account2 = TransactionAccount::try_from_slice_unchecked(&account2_info.data.borrow())?;
+
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
      
      transaction.multisig = expected_allocated_key;
      transaction.program_id = target_program_id;
-     transaction.accounts = [account1_info, account2_info];
+     transaction.accounts = [account1, account2];
      transaction.data = data;
      transaction.signers = [false; MAX_SIGNERS];
      transaction.did_execute = false;
@@ -228,6 +231,8 @@ pub fn ExecuteTransaction(
     let mut transaction = Transaction::unpack_unchecked(&transaction_info.data.borrow())?;
     let mut multisig = Multisig::unpack_unchecked(&multisig_info.data.borrow())?;
     
+
+
     /// number of valid signatures
     let mut num_signers = 0;
     for (position, _) in transaction.signers[0..multisig.n as usize].iter().enumerate() {
@@ -240,20 +245,25 @@ pub fn ExecuteTransaction(
         return Err(ProgramError::MissingRequiredSignature);
     }
     
+    let mut vec1 = Vec::new();
+    vec1.push(transaction.accounts[0]);
+    vec1.push(transaction.accounts[1]);
+    let mut vec2 = Vec::new();
+    vec2.push(transaction.data);
     let mut ix = Instruction {
         program_id: transaction.program_id, 
-        accounts: transaction.accounts,
-        data: transaction.data,
+        accounts: vec1,
+        data: vec2,
     };
     
     let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
-        
+
     invoke_signed(
         &ix,
         // Order doesn't matter and this slice could include all the accounts and be:
         // `&accounts`
-        &transaction.accounts,
+        &[transaction.accounts[0], transaction.accounts[1]],
         &[&[b"You pass butter", &[bump]]],
     )?; 
 
