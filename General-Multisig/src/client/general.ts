@@ -308,8 +308,8 @@ export const createTransactionInstructionData = struct<CreateTransactionInstruct
  */
 export async function CreateTransaction(): Promise<void> {
   let [MultisigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
-  const target = new PublicKey("81948aBFBB5965oTTCpZU8Zxi4dhUjC7sHQx4qr6aqx7");
-  const config = new PublicKey("uxWt8FdYSjxGZdXwBvWJ5794kjkcZq3o76vDrPXprnX");
+  const target = new PublicKey("CiaQJ7UT2Hjmx6SaePrGTtFXUxs7Dm2sX1KVqD3Bj2jg");
+  const config = new PublicKey("5pS2AT2Z4HvRDFKsvfvPS6QC7mKH1bNRUyvU7QcyvJA6");
 
   const data = Buffer.alloc(createTransactionInstructionData.span);
   createTransactionInstructionData.encode(
@@ -432,7 +432,7 @@ export const executeTransactionInstructionData = struct<ExecuteTransactionInstru
 export async function ExecuteTransaction(): Promise<void> {
   let [MultisigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   
-  const config = new PublicKey("uxWt8FdYSjxGZdXwBvWJ5794kjkcZq3o76vDrPXprnX");
+  const config = new PublicKey("5pS2AT2Z4HvRDFKsvfvPS6QC7mKH1bNRUyvU7QcyvJA6");
   const data = Buffer.alloc(executeTransactionInstructionData.span);
   executeTransactionInstructionData.encode(
       {
