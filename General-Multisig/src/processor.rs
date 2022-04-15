@@ -223,7 +223,8 @@ pub fn ExecuteTransaction(
     let account_info_iter = &mut accounts.iter();
     let transaction_info = next_account_info(account_info_iter)?;
     let multisig_info = next_account_info(account_info_iter)?;
-     
+    
+    let config_info = next_account_info(account_info_iter)?;
     check_account_owner(program_id, transaction_info)?;
     check_account_owner(program_id, multisig_info)?;
 
@@ -247,8 +248,8 @@ pub fn ExecuteTransaction(
     
     let mut vec1 = Vec::new(); 
     let mut meta1 = AccountMeta::new(transaction.accounts[0].pubkey, transaction.accounts[0].is_signer)；
-    let mut meta2 = AccountMeta::new_credit_only(transaction.accounts[1].pubkey, transaction.accounts[1].is_signer);
-    
+    let mut meta2 = AccountMeta::new_readonly(transaction.accounts[1].pubkey, transaction.accounts[1].is_signer);
+
     vec1.push(meta1);
     vec1.push(meta2);
     let mut vec2 = Vec::new();
@@ -266,7 +267,7 @@ pub fn ExecuteTransaction(
         &ix,
         // Order doesn't matter and this slice could include all the accounts and be:
         // `&accounts`
-        &[transaction.accounts[0], transaction.accounts[1]],
+        &[config_info.clone(), multisig_info.clone()],
         &[&[b"You pass butter", &[bump]]],
     )?; 
 
