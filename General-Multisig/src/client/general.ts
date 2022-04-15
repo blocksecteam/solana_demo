@@ -133,7 +133,7 @@ export async function checkProgram(): Promise<void> {
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
-      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/Rectangle_Area.so\``,
+      `Failed to read program keypair at '${PROGRAM_KEYPAIR_PATH}' due to error: ${errMsg}. Program may need to be deployed with \`solana program deploy dist/program/General_Multisig.so\``,
     );
   }
 
@@ -142,7 +142,7 @@ export async function checkProgram(): Promise<void> {
   if (programInfo === null) {
     if (fs.existsSync(PROGRAM_SO_PATH)) {
       throw new Error(
-        'Program needs to be deployed with `solana program deploy dist/program/Rectangle_Area.so`',
+        'Program needs to be deployed with `solana program deploy dist/program/General_Multisig.so`',
       );
     } else {
       throw new Error('Program needs to be built and deployed');
