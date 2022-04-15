@@ -174,12 +174,9 @@ impl Pack for Transaction {
                 _ => return Err(ProgramError::InvalidAccountData),
             },
         };
-        for i in 0..MAX_SIGNERS {
-          if signers_flat[i] == 1 {
-            msg!{"work"}
-            result.signers[i] = true;
-          }
-        };
+        for (src, dst) in signers_flat.chunks(1).zip(result.signers.iter_mut()) {
+            *dst = Pubkey::new(src);
+        }
         Ok(result)
     }
     fn pack_into_slice(&self, dst: &mut [u8]) {
