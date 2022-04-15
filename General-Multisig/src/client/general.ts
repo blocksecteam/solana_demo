@@ -217,8 +217,8 @@ export async function createMultisig(): Promise<void> {
  
 
   // Check if the Config account has already been created
-  const Config_Account = await connection.getAccountInfo(MultisigPubkey);
-  if (Config_Account === null) {
+  const Multisig_Account = await connection.getAccountInfo(MultisigPubkey);
+  if (Multisig_Account === null) {
     console.log(
       'Creating account',
       MultisigPubkey.toBase58(),
@@ -443,6 +443,7 @@ export async function ExecuteTransaction(): Promise<void> {
     keys: [
       {pubkey: TransactionPubkey, isSigner: false, isWritable: true},
       {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
+      {pubkey: config, isSigner: false, isWritable: true},
     ],
     programId,
     data: data, 
