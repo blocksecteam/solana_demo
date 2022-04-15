@@ -1,5 +1,5 @@
 //! Program instruction processor
-use crate::{state::{Multisig, Transaction, AccountMeta}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
+use crate::{state::{Multisig, Transaction, TransactionAccount}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     borsh::try_from_slice_unchecked,
@@ -9,7 +9,7 @@ use solana_program::{
     pubkey::{Pubkey,PUBKEY_BYTES},
     program_error::ProgramError,
     program_pack::{IsInitialized, Pack, Sealed},
-    instruction::Instruction,
+    instruction::{AccountMeta, Instruction},
     program::invoke_signed,
     system_instruction
 };
@@ -163,8 +163,8 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
-     let mut account1 = AccountMeta::try_from_slice_unchecked(&account1_info.data.borrow())?;
-     let mut account2 = AccountMeta::try_from_slice_unchecked(&account2_info.data.borrow())?;
+     let mut account1 = try_from_slice_unchecked::<TransactionAccount>(&account1_info.data.borrow())?;
+     let mut account2 = try_from_slice_unchecked::<TransactionAccount>(&account2_info.data.borrow())?;
 
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
@@ -245,9 +245,15 @@ pub fn ExecuteTransaction(
         return Err(ProgramError::MissingRequiredSignature);
     }
     
-    let mut vec1 = Vec::new();
-    vec1.push(transaction.accounts[0]);
-    vec1.push(transaction.accounts[1]);
+    let mut vec1 = Vec::new(); 
+    let mut meta1 = AccountMeta::new()；
+    meta1.pubkey = transaction.accounts[0].pubkey;
+    meta1.is_signer = transaction.accounts[0].is_signer;
+    let mut meta2 = AccountMeta::new_credit_only();
+    meta2.pubkey = transaction.accounts[1].pubkey;
+    meta2.is_signer = transaction.accounts[1].is_signer;
+    vec1.push(meta1);
+    vec1.push(meta2);
     let mut vec2 = Vec::new();
     vec2.push(transaction.data);
     let mut ix = Instruction {

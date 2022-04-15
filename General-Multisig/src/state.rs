@@ -67,7 +67,7 @@ impl Pack for Multisig {
 
 /// Transaction Account
 #[derive(BorshSerialize, BorshDeserialize, Debug)] 
-pub struct AccountMeta {
+pub struct TransactionAccount {
     pub pubkey: Pubkey,
     pub is_signer: bool,
     pub is_writable: bool,
@@ -81,7 +81,7 @@ pub struct Transaction {
     /// Target program to execute against.
     pub program_id: Pubkey,
     /// accounts passed to target program 
-    pub accounts: [AccountMeta; 2],
+    pub accounts: [TransactionAccount; 2],
     /// instruction data 
     pub data: u8,
     /// signers[index] is true iff multisig.owners[index] signed the transaction.
@@ -131,7 +131,7 @@ impl Pack for Transaction {
             MAX_SIGNERS, 
             1, 
             1];
-        let mut t1 = AccountMeta {
+        let mut t1 = TransactionAccount {
             pubkey: Pubkey::new_from_array(*pubkey1),
             is_signer: match is_signer1 {
                 [0] => false,
@@ -144,7 +144,7 @@ impl Pack for Transaction {
                 _ => return Err(ProgramError::InvalidAccountData),
             },
         };
-        let mut t2 = AccountMeta {
+        let mut t2 = TransactionAccount {
             pubkey: Pubkey::new_from_array(*pubkey2),
             is_signer: match is_signer2 {
                 [0] => false,
