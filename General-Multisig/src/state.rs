@@ -175,7 +175,11 @@ impl Pack for Transaction {
             },
         };
         for (src, dst) in signers_flat.chunks(1).zip(result.signers.iter_mut()) {
-            *dst = Pubkey::new(src);
+            if src == &[0] {
+               *dst = false;
+            } else {
+               *dst = true;
+            }
         }
         Ok(result)
     }
