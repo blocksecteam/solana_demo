@@ -282,7 +282,7 @@ export const initializeConfigInstructionData = struct<InitializeConfigInstructio
 export async function InitializeConfig(): Promise<void> {
   let [ConfigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   const data = Buffer.alloc(initializeConfigInstructionData.span);
-  const multisig = new PublicKey("8jDoRkDMyUp3ow9KTv1dqphTi6LFwgRw9dqCD6dXakAs");
+  const multisig = new PublicKey("G7AVMsy5HwsKq3Z2vQjStDavjKwFHY7fzrQG1Sdbq161");
   initializeConfigInstructionData.encode(
       {
         instruction: 1,
