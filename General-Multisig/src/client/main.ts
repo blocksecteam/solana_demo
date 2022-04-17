@@ -33,16 +33,16 @@ async function main() {
   //await InitializeMultisig();
 
   // Create Transaction 
-  await CreateTransaction();
+  //await CreateTransaction();
 
   // Approve1
-  await Approve1();
+  //await Approve1();
   
   // Approve2
-  await Approve2();
+  //await Approve2();
 
   // Execute Transaction
-  await ExecuteTransaction();
+  //await ExecuteTransaction();
 
   console.log('Success');
 }
