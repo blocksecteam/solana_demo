@@ -27,7 +27,7 @@ async function main() {
   await checkProgram();
   
   // create Multisig;
-  //await createMultisig();
+  await createMultisig();
   
   // Initialize Multisig 
   //await InitializeMultisig();
