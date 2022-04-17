@@ -230,6 +230,8 @@ pub fn ExecuteTransaction(
     let multisig_info = next_account_info(account_info_iter)?;
     
     let config_info = next_account_info(account_info_iter)?;
+
+    let target_info = next_account_info(account_info_iter)?;
     check_account_owner(program_id, transaction_info)?;
     check_account_owner(program_id, multisig_info)?;
 
@@ -272,7 +274,7 @@ pub fn ExecuteTransaction(
         &ix,
         // Order doesn't matter and this slice could include all the accounts and be:
         // `&accounts`
-        &[config_info.clone(), multisig_info.clone()],
+        &[config_info.clone(), multisig_info.clone(), target_info.clone()],
         &[&[b"You pass butter", &[bump]]],
     )?; 
 
