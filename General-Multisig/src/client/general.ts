@@ -321,7 +321,7 @@ export async function CreateTransaction(): Promise<void> {
     keys: [
       {pubkey: TransactionPubkey, isSigner: false, isWritable: true},
       {pubkey: config, isSigner: false, isWritable: true},
-      {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
+      {pubkey: MultisigPubkey, isSigner: true, isWritable: false},
     ],
     programId,
     data: data, 

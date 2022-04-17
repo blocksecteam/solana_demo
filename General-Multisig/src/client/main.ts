@@ -27,7 +27,7 @@ async function main() {
   await checkProgram();
   
   // create Multisig;
-  await createMultisig();
+  //await createMultisig();
   
   // Initialize Multisig 
   //await InitializeMultisig();
@@ -39,10 +39,10 @@ async function main() {
   //await Approve1();
   
   // Approve2
-  await Approve2();
+  //await Approve2();
 
   // Execute Transaction
-  await ExecuteTransaction();
+  //await ExecuteTransaction();
 
   console.log('Success');
 }
