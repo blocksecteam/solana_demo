@@ -440,6 +440,7 @@ export const executeTransactionInstructionData = struct<ExecuteTransactionInstru
 export async function ExecuteTransaction(): Promise<void> {
   let [MultisigPubkey, bump] = await PublicKey.findProgramAddress([Buffer.from('You pass butter', 'utf8')], programId);
   
+  const target = new PublicKey("JAYQonn28vucKxddsVy3uHQrgq5nLUsSfkjhGwbVQMHe");
   const config = new PublicKey("XaAF2LQES3j2qSVvi6yfRsbdEF9RARKwPnv9mgN3FzZ");
   const data = Buffer.alloc(executeTransactionInstructionData.span);
   executeTransactionInstructionData.encode(
@@ -453,6 +454,7 @@ export async function ExecuteTransaction(): Promise<void> {
       {pubkey: TransactionPubkey, isSigner: false, isWritable: true},
       {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
       {pubkey: config, isSigner: false, isWritable: true},
+      {pubkey: target, isSigner: false, isWritable: false},
     ],
     programId,
     data: data, 
