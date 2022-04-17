@@ -156,19 +156,18 @@ pub fn CreateTransaction(
      let transaction_info = next_account_info(account_info_iter)?;
      let account1_info = next_account_info(account_info_iter)?;
      let account2_info = next_account_info(account_info_iter)?;
-     
-     msg!{"works here?"}; 
+      
      /// deserializing 
      let mut transaction = Transaction::unpack_unchecked(&transaction_info.data.borrow())?;
      if transaction.is_initialized {
         return Err(ProgramError::InvalidArgument);
      }
      
-     msg!{"works after transaction unpack?"};
-     
 
      let mut account1 = try_from_slice_unchecked::<TransactionAccount>(&account1_info.data.borrow())?;
      let mut account2 = try_from_slice_unchecked::<TransactionAccount>(&account2_info.data.borrow())?;
+     
+     msg!{"works?1"};
 
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
@@ -181,9 +180,12 @@ pub fn CreateTransaction(
      transaction.did_execute = false;
      transaction.is_initialized = true;
      
-     
+     msg!{"works?2"};
+
      /// serializing
      Transaction::pack(transaction, &mut transaction_info.data.borrow_mut())?;
+     
+     msg!{"works?3"};
 
      Ok(())
 }
