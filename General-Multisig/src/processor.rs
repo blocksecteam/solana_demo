@@ -42,8 +42,7 @@ pub fn process_instruction(
             target_program_id,
             data
         }=> {
-            msg!{"works here"};
-            
+            msg!("Instruction: CreateTransaction");
             CreateTransaction(program_id, accounts, target_program_id, data)
         }
         MultisigInstruction::Approve => {
@@ -158,14 +157,15 @@ pub fn CreateTransaction(
      let account1_info = next_account_info(account_info_iter)?;
      let account2_info = next_account_info(account_info_iter)?;
      
-
+     msg!{"works here?"}; 
      /// deserializing 
      let mut transaction = Transaction::unpack_unchecked(&transaction_info.data.borrow())?;
      if transaction.is_initialized {
         return Err(ProgramError::InvalidArgument);
      }
      
-
+     msg!{"works after transaction unpack?"};
+     
 
      let mut account1 = try_from_slice_unchecked::<TransactionAccount>(&account1_info.data.borrow())?;
      let mut account2 = try_from_slice_unchecked::<TransactionAccount>(&account2_info.data.borrow())?;
