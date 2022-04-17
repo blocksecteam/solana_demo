@@ -254,8 +254,8 @@ pub fn ExecuteTransaction(
     }
     
     let mut vec1 = Vec::new(); 
-    let mut meta1 = AccountMeta::new(transaction.accounts[0].pubkey, transaction.accounts[0].is_signer);
-    let mut meta2 = AccountMeta::new_readonly(transaction.accounts[1].pubkey, transaction.accounts[1].is_signer);
+    let mut meta1 = AccountMeta::new_readonly(transaction.accounts[0].pubkey, transaction.accounts[0].is_signer);
+    let mut meta2 = AccountMeta::new(transaction.accounts[1].pubkey, transaction.accounts[1].is_signer);
 
     vec1.push(meta1);
     vec1.push(meta2);
@@ -280,10 +280,6 @@ pub fn ExecuteTransaction(
 
     transaction.did_execute = true;
     
-
-    Transaction::pack(transaction, &mut transaction_info.data.borrow_mut())?;
-
-
     Ok(())
 
 }
