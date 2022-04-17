@@ -452,7 +452,7 @@ export async function ExecuteTransaction(): Promise<void> {
   const instruction = new TransactionInstruction({
     keys: [
       {pubkey: TransactionPubkey, isSigner: false, isWritable: true},
-      {pubkey: MultisigPubkey, isSigner: true, isWritable: false},
+      {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
       {pubkey: config, isSigner: false, isWritable: true},
       {pubkey: target, isSigner: false, isWritable: false},
     ],
