@@ -102,12 +102,12 @@ export async function establishPayer(): Promise<void> {
   
  
   
-  let airdropSignature = await connection.requestAirdrop(
-  payer.publicKey,
-  1000000000,
-  );
+  //let airdropSignature = await connection.requestAirdrop(
+  //payer.publicKey,
+  //1000000000,
+  //);
   
-  await connection.confirmTransaction(airdropSignature);
+  //await connection.confirmTransaction(airdropSignature);
   
   let lamports = await connection.getBalance(payer.publicKey);
 
@@ -432,7 +432,7 @@ export async function Approve2(): Promise<void> {
   );
 
   await connection.confirmTransaction(airdropSignature3);
-  
+
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
