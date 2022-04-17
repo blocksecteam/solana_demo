@@ -162,7 +162,6 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
-     msg!{"works?1"};
      let mut account1 = TransactionAccount {
              pubkey: *account1_info.key,
              is_signer: account1_info.is_signer,
@@ -174,7 +173,6 @@ pub fn CreateTransaction(
              is_writable: account2_info.is_writable
      };
      
-     msg!{"works?2"};
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
      
@@ -188,8 +186,6 @@ pub fn CreateTransaction(
 
      /// serializing
      Transaction::pack(transaction, &mut transaction_info.data.borrow_mut())?;
-     
-     msg!{"works?3"};
 
      Ok(())
 }

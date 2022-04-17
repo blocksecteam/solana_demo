@@ -122,6 +122,20 @@ export async function establishPayer(): Promise<void> {
   signer2 = Keypair.generate();
   signer3 = Keypair.generate();
   
+  let airdropSignature2 = await connection.requestAirdrop(
+  signer2.publicKey,
+  1000000000,
+  );
+
+  await connection.confirmTransaction(airdropSignature2);
+  
+  let airdropSignature3 = await connection.requestAirdrop(
+  signer3.publicKey,
+  1000000000,
+  );
+
+  await connection.confirmTransaction(airdropSignature3);
+
   console.log(signer2.publicKey.toBase58());
   console.log(signer3.publicKey.toBase58());
 }
@@ -376,14 +390,15 @@ export async function Approve1(): Promise<void> {
     programId,
     data: data, 
   });
-  console.log(
-      "success, approve1"
-    );
+  
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
     [signer2],
   );
+  console.log(
+      "success, approve1"
+    );
 }
 
 export interface Approve2InstructionData {
@@ -422,6 +437,9 @@ export async function Approve2(): Promise<void> {
     new Transaction().add(instruction),
     [signer3],
   );
+  console.log(
+      "success, approve2"
+    );
 }
 
 
