@@ -100,11 +100,11 @@ export async function establishPayer(): Promise<void> {
 
   payer = Keypair.generate();
   
-  
+ 
   
   let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  3*LAMPORTS_PER_SOL,
+  1000000000,
   );
   
   await connection.confirmTransaction(airdropSignature);
@@ -342,10 +342,6 @@ export async function CreateTransaction(): Promise<void> {
     new Transaction().add(instruction),
     [payer],
   );
-
-  console.log(
-      "success, createTransaction"
-    );
 }
 
 
