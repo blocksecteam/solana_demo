@@ -122,19 +122,6 @@ export async function establishPayer(): Promise<void> {
   signer2 = Keypair.generate();
   signer3 = Keypair.generate();
   
-  let airdropSignature2 = await connection.requestAirdrop(
-  signer2.publicKey,
-  1000000000,
-  );
-
-  await connection.confirmTransaction(airdropSignature2);
-  
-  let airdropSignature3 = await connection.requestAirdrop(
-  signer3.publicKey,
-  1000000000,
-  );
-
-  await connection.confirmTransaction(airdropSignature3);
 
   console.log(signer2.publicKey.toBase58());
   console.log(signer3.publicKey.toBase58());
@@ -391,6 +378,13 @@ export async function Approve1(): Promise<void> {
     data: data, 
   });
   
+  let airdropSignature2 = await connection.requestAirdrop(
+  signer2.publicKey,
+  1000000000,
+  );
+
+  await connection.confirmTransaction(airdropSignature2);
+
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
@@ -432,6 +426,13 @@ export async function Approve2(): Promise<void> {
     data: data, 
   });
 
+  let airdropSignature3 = await connection.requestAirdrop(
+  signer3.publicKey,
+  1000000000,
+  );
+
+  await connection.confirmTransaction(airdropSignature3);
+  
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
