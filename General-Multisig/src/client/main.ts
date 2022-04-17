@@ -30,7 +30,7 @@ async function main() {
   await createMultisig();
   
   // Initialize Multisig 
-  await InitializeMultisig();
+  //await InitializeMultisig();
 
   // Create Transaction 
   //await CreateTransaction();
