@@ -333,12 +333,19 @@ export async function CreateTransaction(): Promise<void> {
     programId,
     data: data, 
   });
-
+  
+  console.log(
+      "fail, createTransaction"
+    );
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
     [payer],
   );
+
+  console.log(
+      "success, createTransaction"
+    );
 }
 
 
@@ -373,7 +380,9 @@ export async function Approve1(): Promise<void> {
     programId,
     data: data, 
   });
-
+  console.log(
+      "success, approve1"
+    );
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
