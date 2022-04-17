@@ -332,6 +332,9 @@ export async function CreateTransaction(): Promise<void> {
     new Transaction().add(instruction),
     [payer],
   );
+  console.log(
+      "success, createTransaction"
+    );
 }
 
 
