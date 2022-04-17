@@ -164,12 +164,12 @@ pub fn CreateTransaction(
      
      
      let mut account1 = TransactionAccount {
-             pubkey: account1_info.key,
+             pubkey: *account1_info.key,
              is_signer: account1_info.is_signer,
              is_writable: account1_info.is_writable
      };
      let mut account2 = TransactionAccount {
-             pubkey: account2_info.key,
+             pubkey: *account2_info.key,
              is_signer: account2_info.is_signer,
              is_writable: account2_info.is_writable
      };
