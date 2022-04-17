@@ -409,23 +409,16 @@ export async function Approve2(): Promise<void> {
     keys: [
       {pubkey: TransactionPubkey, isSigner: false, isWritable: true},
       {pubkey: MultisigPubkey, isSigner: false, isWritable: false},
-      {pubkey: signer3.publicKey, isSigner: true, isWritable: false},
+      {pubkey: payer.publicKey, isSigner: true, isWritable: false},
     ],
     programId,
     data: data, 
   });
 
-  let airdropSignature3 = await connection.requestAirdrop(
-  signer3.publicKey,
-  1000000000,
-  );
-
-  await connection.confirmTransaction(airdropSignature3);
-
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
-    [signer3],
+    [payer],
   );
   console.log(
       "success, approve2"
