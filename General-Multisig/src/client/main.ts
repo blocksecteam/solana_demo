@@ -33,7 +33,7 @@ async function main() {
   //await InitializeMultisig();
 
   // Create Transaction 
-  await CreateTransaction();
+  //await CreateTransaction();
 
   // Approve1
   //await Approve1();
