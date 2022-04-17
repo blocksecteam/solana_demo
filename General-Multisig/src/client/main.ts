@@ -36,7 +36,7 @@ async function main() {
   await CreateTransaction();
 
   // Approve1
-  await Approve1();
+  //await Approve1();
   
   // Approve2
   await Approve2();
