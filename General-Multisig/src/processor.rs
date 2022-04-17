@@ -42,8 +42,8 @@ pub fn process_instruction(
             target_program_id,
             data
         }=> {
-            msg!("Instruction: CreateTransaction");
             msg!{"works here"};
+            
             CreateTransaction(program_id, accounts, target_program_id, data)
         }
         MultisigInstruction::Approve => {
