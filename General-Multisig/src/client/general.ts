@@ -98,16 +98,8 @@ export async function establishConnection(): Promise<void> {
  */
 export async function establishPayer(): Promise<void> {
 
-  payer = Keypair.generate();
+  payer = await getPayer();
   
- 
-  
-  //let airdropSignature = await connection.requestAirdrop(
-  //payer.publicKey,
-  //1000000000,
-  //);
-  
-  //await connection.confirmTransaction(airdropSignature);
   
   let lamports = await connection.getBalance(payer.publicKey);
 
@@ -335,9 +327,6 @@ export async function CreateTransaction(): Promise<void> {
     data: data, 
   });
   
-  console.log(
-      "fail, createTransaction"
-    );
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
