@@ -43,6 +43,7 @@ pub fn process_instruction(
             data
         }=> {
             msg!("Instruction: CreateTransaction");
+            msg!{"works here"};
             CreateTransaction(program_id, accounts, target_program_id, data)
         }
         MultisigInstruction::Approve => {
@@ -157,7 +158,7 @@ pub fn CreateTransaction(
      let account1_info = next_account_info(account_info_iter)?;
      let account2_info = next_account_info(account_info_iter)?;
      
-     msg!{"works here"};
+
      /// deserializing 
      let mut transaction = Transaction::unpack_unchecked(&transaction_info.data.borrow())?;
      if transaction.is_initialized {
