@@ -2,7 +2,6 @@
 use crate::{state::{Multisig, Transaction, TransactionAccount}, instruction::{MultisigInstruction, is_valid_signer_index, MAX_SIGNERS}};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
-    borsh::try_from_slice_unchecked,
     account_info::{next_account_info, AccountInfo},
     program_memory::{sol_memcmp, sol_memset},
     entrypoint::ProgramResult, msg,
@@ -163,11 +162,18 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
-
-     let mut account1 = try_from_slice_unchecked::<TransactionAccount>(&account1_info.data.borrow())?;
-     let mut account2 = try_from_slice_unchecked::<TransactionAccount>(&account2_info.data.borrow())?;
      
-     msg!{"works?1"};
+     let mut account1 = TransactionAccount {
+             pubkey: account1_info.key,
+             is_signer: account1_info.is_signer,
+             is_writable: account1_info.is_writable
+     };
+     let mut account2 = TransactionAccount {
+             pubkey: account2_info.key,
+             is_signer: account2_info.is_signer,
+             is_writable: account2_info.is_writable
+     };
+     
 
      let (expected_allocated_key, bump) =
         Pubkey::find_program_address(&[b"You pass butter"], program_id);
@@ -179,8 +185,6 @@ pub fn CreateTransaction(
      transaction.signers = [false; MAX_SIGNERS];
      transaction.did_execute = false;
      transaction.is_initialized = true;
-     
-     msg!{"works?2"};
 
      /// serializing
      Transaction::pack(transaction, &mut transaction_info.data.borrow_mut())?;
