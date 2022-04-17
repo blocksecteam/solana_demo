@@ -163,6 +163,8 @@ pub fn CreateTransaction(
         return Err(ProgramError::InvalidArgument);
      }
      
+     msg!{"works here"};
+
      let mut account1 = try_from_slice_unchecked::<TransactionAccount>(&account1_info.data.borrow())?;
      let mut account2 = try_from_slice_unchecked::<TransactionAccount>(&account2_info.data.borrow())?;
 
