@@ -47,7 +47,7 @@ pub fn InitializeUser(
      /// deserializing 
      let mut user = try_from_slice_unchecked::<User>(&user_info.data.borrow())?;
      
-     user.authority = authority_info.key;
+     user.authority = *authority_info.key;
      
      /// serializing
      user.serialize(&mut &mut user_info.data.borrow_mut()[..])?;
@@ -66,7 +66,7 @@ pub fn InitializeMeta(
      /// deserializing 
      let mut meta = try_from_slice_unchecked::<Metadata>(&meta_info.data.borrow())?;
      
-     meta.account = account_info.key;
+     meta.account = *account_info.key;
      
      /// serializing
      meta.serialize(&mut &mut meta_info.data.borrow_mut()[..])?;
@@ -90,7 +90,7 @@ pub fn Test(
 
     /// deserializing 
     let mut user = try_from_slice_unchecked::<User>(&user_info.data.borrow())?;
-    if authority_info.key != user.authority {
+    if *authority_info.key != user.authority {
         msg!("The authority of the user account should match the authority account passed in");
         return Err(ProgramError::InvalidArgument);
     }
