@@ -45,7 +45,7 @@ pub fn InitializeUser(
      let authority_info = next_account_info(account_info_iter)?;
 
      /// deserializing 
-     let mut user = User::try_from_slice_unchecked(&user_info.data.borrow())?;
+     let mut user = try_from_slice_unchecked::<User>(&user_info.data.borrow())?;
      
      user.authority = authority_info.key;
      
@@ -64,7 +64,7 @@ pub fn InitializeMeta(
      let account_info = next_account_info(account_info_iter)?;
 
      /// deserializing 
-     let mut meta = Metadata::try_from_slice_unchecked(&meta_info.data.borrow())?;
+     let mut meta = try_from_slice_unchecked::<Metadata>(&meta_info.data.borrow())?;
      
      meta.account = account_info.key;
      
@@ -89,7 +89,7 @@ pub fn Test(
     }
 
     /// deserializing 
-    let mut user = User::try_from_slice_unchecked(&user_info.data.borrow())?;
+    let mut user = try_from_slice_unchecked::<User>(&user_info.data.borrow())?;
     if authority_info.key != user.authority {
         msg!("The authority of the user account should match the authority account passed in");
         return Err(ProgramError::InvalidArgument);
@@ -100,7 +100,7 @@ pub fn Test(
         return Err(ProgramError::MissingRequiredSignature);
     }
 
-    msg!(Test Passed!!!);
+    msg!("Test Passed!!!");
 
     Ok(())
 
