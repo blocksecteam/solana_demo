@@ -14,7 +14,10 @@ import {
 import fs from 'mz/fs';
 import path from 'path';
 import * as borsh from 'borsh';
-
+import {
+  struct,
+  u8,
+} from '@solana/buffer-layout';
 import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
 
 /**
@@ -250,18 +253,34 @@ export async function createAuthority(): Promise<void> {
   }
 }
 
+export interface InitializeUserInstructionData {
+    instruction: number;
+}
+
+export const initializeUserInstructionData = struct<InitializeUserInstructionData>([
+    u8('instruction'),
+]);
 /**
  * Initialize User 
  */
 export async function initializeUser(): Promise<void> {
+  
+  const data = Buffer.alloc(initializeUserInstructionData.span);
+  initializeUserInstructionData.encode(
+      {
+        instruction: 0,   
+      },
+      data
+  );
 
   const instruction = new TransactionInstruction({
     keys: [{pubkey: UserPubkey, isSigner: false, isWritable: true},
            {pubkey: AuthorityPubkey, isSigner: false, isWritable: false},
           ],
     programId,
-    data: Buffer.alloc(0), // All instructions are hellos
+    data: data,
   });
+
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
@@ -269,18 +288,34 @@ export async function initializeUser(): Promise<void> {
   );
 }
 
+export interface InitializeMetadataInstructionData {
+    instruction: number;
+}
+
+export const initializeMetadataInstructionData = struct<InitializeMetadataInstructionData>([
+    u8('instruction'),
+]);
 /**
  * Initialize Metadata 
  */
 export async function initializeMetadata(): Promise<void> {
+  
+  const data = Buffer.alloc(initializeMetadataInstructionData.span);
+  initializeMetadataInstructionData.encode(
+      {
+        instruction: 1,   
+      },
+      data
+  );
 
   const instruction = new TransactionInstruction({
     keys: [{pubkey: MetaPubkey, isSigner: false, isWritable: true},
            {pubkey: payer.publicKey, isSigner: true, isWritable: false},
           ],
     programId,
-    data: Buffer.alloc(0), // All instructions are hellos
+    data: data,
   });
+
   await sendAndConfirmTransaction(
     connection,
     new Transaction().add(instruction),
@@ -289,17 +324,31 @@ export async function initializeMetadata(): Promise<void> {
 }
 
 
+export interface TestInstructionData {
+    instruction: number;
+}
+
+export const testInstructionData = struct<TestInstructionData>([
+    u8('instruction'),
+]);
 /**
  * Test
  */
 export async function test(): Promise<void> {
-
+  
+  const data = Buffer.alloc(testInstructionData.span);
+  initializeMetadataInstructionData.encode(
+      {
+        instruction: 2,   
+      },
+      data
+  );
   const instruction = new TransactionInstruction({
     keys: [{pubkey: MetaPubkey, isSigner: false, isWritable: true},
            {pubkey: payer.publicKey, isSigner: true, isWritable: false},
           ],
     programId,
-    data: Buffer.alloc(0), // All instructions are hellos
+    data: data, // All instructions are hellos
   });
   await sendAndConfirmTransaction(
     connection,
